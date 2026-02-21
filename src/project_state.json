@@ -1,98 +1,41 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Investment platform with enhanced create investment form supporting multiple payment modes and e-project selection",
-  "architectural_notes": [
-    "Investment form supports multiple payment modes: GPay, Crypto, CBDC, Wallets",
-    "E-project selection dropdown populated with secoinfi-apps options",
-    "Form accessible to all users (investors/subscribers) without per-account admin changes",
-    "Payment details: UPI secoin@uboi, WhatsApp +919620058644, ETH 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7"
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [
+    "Upload button flickers and does not respond",
+    "No upload status or progress percentage displayed during file upload"
   ],
-  "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-in-the-investmentform-component-add-an-e-project-dropdown-field-positioned-immediately-after-the-description-field-populate-this-dropdown-with-all-secoinfi-apps-options-that-are-currently-defined-in-the-backend-the-38-options-from-the-e-project-list-the-dropdown-should-be-required-and-visible-to-all-users-not-just-admins",
-      "title": "In the InvestmentForm component, add an e-project dropdown field positioned immediately after the 'Description' field. Populate this dropdown with all secoinfi-apps options that are currently defined in the backend (the 38 options from the e-project list). The dropdown should be required and visible to all users, not just admins.",
+      "id": "feature-fix-the-upload-button-in-the-features-component-so-it-responds-correctly-when-clicked-and-does-not-just-flicker",
+      "title": "Fix the upload button in the Features component so it responds correctly when clicked and does not just flicker",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-mode-select-dropdown-in-the-investmentform-component-after-the-e-project-dropdown-this-dropdown-must-contain-exactly-four-options-gpay-crypto-cbdc-and-wallets-the-field-should-be-required-and-visible-to-all-users",
-      "title": "Add a 'Mode' select dropdown in the InvestmentForm component after the e-project dropdown. This dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. The field should be required and visible to all users.",
+      "id": "feature-add-upload-progress-indicator-showing-percentage-completion-during-file-upload-in-the-features-component",
+      "title": "Add upload progress indicator showing percentage completion during file upload in the Features component",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-two-transaction-id-input-fields-in-the-investmentform-component-after-the-mode-dropdown-1-txn-id-nat-as-a-required-numeric-input-field-accepting-only-natural-numbers-and-2-txn-id-string-as-an-optional-text-input-field-both-fields-should-be-visible-to-all-users",
-      "title": "Add two transaction ID input fields in the InvestmentForm component after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field accepting only natural numbers, and (2) 'Txn ID (String)' as an optional text input field. Both fields should be visible to all users.",
+      "id": "feature-display-success-or-error-status-message-after-file-upload-completes-in-the-features-component",
+      "title": "Display success or error status message after file upload completes in the Features component",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-add-a-payment-notice-section-in-the-investmentform-component-after-the-transaction-id-fields-display-the-following-information-upi-id-secoin-uboi-whatsapp-contact-link-https-wa-me-919620058644-and-ethereum-address-0x4a100e184ac1f17491fbbcf549cebfb676694ef7-format-this-as-an-informational-notice-box-visible-to-all-users",
-      "title": "Add a payment notice section in the InvestmentForm component after the transaction ID fields. Display the following information: UPI ID 'secoin@uboi', WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Format this as an informational notice box visible to all users.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Add e-project dropdown to create investment form with secoinfi-apps options",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Add payment mode selector (GPay, Crypto, CBDC, Wallets) to investment form",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Add transaction ID fields (Nat and optional string) to investment form",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Display payment notice with UPI, WhatsApp, and Ethereum address in investment form",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Make investment form visible to all users without admin modification requirement",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-10",
-      "summary": "Ensure the expanded InvestmentForm with all new fields (e-project dropdown, Mode select, transaction ID fields, and payment notice) is visible and accessible to all authenticated users in the Dashboard component, not just admins. Remove any admin-only restrictions on form visibility while maintaining the form's position in the existing Dashboard layout.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-11",
-      "summary": "Update the backend main.mo createInvestment function to accept and store the new fields from the expanded form: e-project selection (text), mode (text), transaction ID as Nat (numeric), and optional transaction ID as string. Ensure the Investment type includes these new fields.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "status": "pending"
-    }
-  ],
-  "projectName": "Expand Create Investment Form with E-Project, Payment Mode, Transaction IDs, and Payment Notice",
+  "new_feature_requests": [],
+  "projectName": "Fix upload button flickering and add progress indicator",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -1,90 +1,56 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T17:32:48.755Z",
+  "generatedAt": "2026-02-21T19:17:48.698Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 4,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "In the InvestmentForm component, add an e-project dropdown field positioned immediately after the 'Description' field. Populate this dropdown with all secoinfi-apps options that are currently defined in the backend (the 38 options from the e-project list). The dropdown should be required and visible to all users, not just admins.",
+        "summary": "Fix the upload button in the Features component so it responds correctly when clicked and does not just flicker",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
+          "frontend/src/components/Features.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
+          "frontend/src/components/Features.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add a 'Mode' select dropdown in the InvestmentForm component after the e-project dropdown. This dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. The field should be required and visible to all users.",
+        "summary": "Add upload progress indicator showing percentage completion during file upload in the Features component",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
+          "frontend/src/components/Features.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
+          "frontend/src/components/Features.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Add two transaction ID input fields in the InvestmentForm component after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field accepting only natural numbers, and (2) 'Txn ID (String)' as an optional text input field. Both fields should be visible to all users.",
+        "summary": "Display success or error status message after file upload completes in the Features component",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
+          "frontend/src/components/Features.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
+          "frontend/src/components/Features.tsx"
         ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add a payment notice section in the InvestmentForm component after the transaction ID fields. Display the following information: UPI ID 'secoin@uboi', WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Format this as an informational notice box visible to all users.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/InvestmentForm.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Ensure the expanded InvestmentForm with all new fields (e-project dropdown, Mode select, transaction ID fields, and payment notice) is visible and accessible to all authenticated users in the Dashboard component, not just admins. Remove any admin-only restrictions on form visibility while maintaining the form's position in the existing Dashboard layout.",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/components/Dashboard.tsx"
-        ],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Update the backend main.mo createInvestment function to accept and store the new fields from the expanded form: e-project selection (text), mode (text), transaction ID as Nat (numeric), and optional transaction ID as string. Ensure the Investment type includes these new fields.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/InvestmentForm.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/components/Features.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCreateInvestment } from '../hooks/useQueries';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -57,6 +58,7 @@ const E_PROJECTS = [
 const PAYMENT_MODES = ["GPay", "Crypto", "CBDC", "Wallets"];
 
 export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
+  const { identity } = useInternetIdentity();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [eProject, setEProject] = useState<string>('');
@@ -67,6 +69,11 @@ export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!identity) {
+      toast.error('Please log in to create investments');
+      return;
+    }
 
     if (!name.trim()) {
       toast.error('Please enter an investment name');
@@ -231,27 +238,21 @@ export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline"
                   >
-                    <MessageCircle className="h-3.5 w-3.5" />
+                    <MessageCircle className="h-3 w-3" />
                     +91 96200 58644
                   </a>
                 </p>
-                <p className="break-all">
-                  <span className="font-medium">Ethereum Address:</span>
-                  <br />
-                  <code className="text-xs bg-blue-100 dark:bg-blue-900/30 px-1 py-0.5 rounded">
-                    0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7
-                  </code>
-                </p>
+                <p><span className="font-medium">Ethereum:</span> 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb</p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={createInvestment.isPending}
+      <Button 
+        type="submit" 
+        className="w-full" 
+        disabled={createInvestment.isPending || !identity}
       >
         {createInvestment.isPending ? 'Creating...' : 'Create Investment'}
       </Button>

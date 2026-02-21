@@ -1,137 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Expand Create Investment Form with E-Project, Payment Mode, Transaction IDs, and Payment Notice",
-  "priority": "normal",
+  "title": "Fix upload button flickering and add progress indicator",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "In the InvestmentForm component, add an e-project dropdown field positioned immediately after the 'Description' field. Populate this dropdown with all secoinfi-apps options that are currently defined in the backend (the 38 options from the e-project list). The dropdown should be required and visible to all users, not just admins.",
+      "text": "Fix the upload button in the Features component so it responds correctly when clicked and does not just flicker",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-6"
         ],
         "quotes": [
-          "an e‑project dropdown populated with these exact options: [list all secoinfi‑apps]"
+          "Upload button is not working as it only flickers"
         ]
       },
       "acceptanceCriteria": [
-        "E-project dropdown appears after Description field in InvestmentForm",
-        "Dropdown contains all 38 secoinfi-apps options",
-        "Field is visible to all users (admin and investor roles)",
-        "Field is required for form submission"
+        "Upload button triggers file upload when clicked",
+        "Button does not flicker or display inconsistent visual states",
+        "File selection dialog opens successfully"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add a 'Mode' select dropdown in the InvestmentForm component after the e-project dropdown. This dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. The field should be required and visible to all users.",
+      "text": "Add upload progress indicator showing percentage completion during file upload in the Features component",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-6"
         ],
         "quotes": [
-          "a 'Mode' select with options GPay, Crypto, CBDC, Wallets"
+          "No response reg. its upload status / progess in %ge,."
         ]
       },
       "acceptanceCriteria": [
-        "Mode dropdown appears after e-project field",
-        "Dropdown contains exactly: GPay, Crypto, CBDC, Wallets",
-        "Field is required for form submission",
-        "Field is visible to all users"
+        "Progress percentage is displayed during file upload",
+        "Progress indicator updates in real-time as upload progresses",
+        "Progress reaches 100% when upload completes successfully",
+        "User receives clear feedback throughout the upload process"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add two transaction ID input fields in the InvestmentForm component after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field accepting only natural numbers, and (2) 'Txn ID (String)' as an optional text input field. Both fields should be visible to all users.",
+      "text": "Display success or error status message after file upload completes in the Features component",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-6"
         ],
         "quotes": [
-          "an input for Txn ID as Nat, and an optional Txn ID as string"
+          "No response reg. its upload status"
         ]
       },
       "acceptanceCriteria": [
-        "Txn ID (Nat) field accepts only numeric input",
-        "Txn ID (Nat) is required",
-        "Txn ID (String) field accepts text input",
-        "Txn ID (String) is optional",
-        "Both fields are visible to all users"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add a payment notice section in the InvestmentForm component after the transaction ID fields. Display the following information: UPI ID 'secoin@uboi', WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Format this as an informational notice box visible to all users.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "the notice text about UPI secoin@uboi, WhatsApp link https://wa.me/919620058644, and Ethereum address 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Notice displays UPI ID: secoin@uboi",
-        "Notice includes clickable WhatsApp link to +91 96200 58644",
-        "Notice displays Ethereum address: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7",
-        "Notice is styled as an informational box",
-        "Notice is visible to all users"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Ensure the expanded InvestmentForm with all new fields (e-project dropdown, Mode select, transaction ID fields, and payment notice) is visible and accessible to all authenticated users in the Dashboard component, not just admins. Remove any admin-only restrictions on form visibility while maintaining the form's position in the existing Dashboard layout.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ],
-        "quotes": [
-          "Form for its input to be submitted by the Users/ Investors/ Subscribers must be visible to All without any modification to each A/c mentioned by the Admin"
-        ]
-      },
-      "acceptanceCriteria": [
-        "InvestmentForm is visible on Dashboard for all authenticated users",
-        "No admin-only conditional rendering wraps the form",
-        "Form remains in its current position in the Dashboard",
-        "All new fields are accessible to investor and admin roles"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Update the backend main.mo createInvestment function to accept and store the new fields from the expanded form: e-project selection (text), mode (text), transaction ID as Nat (numeric), and optional transaction ID as string. Ensure the Investment type includes these new fields.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Investment type includes eProject, mode, txnIdNat, and txnIdString fields",
-        "createInvestment function accepts these parameters",
-        "New fields are persisted to stable storage",
-        "Function validates required fields (eProject, mode, txnIdNat)"
+        "Success message displays when upload completes successfully",
+        "Error message displays if upload fails",
+        "Status message is clearly visible to the user"
       ]
     }
   ],
   "constraints": [
-    "The InvestmentForm must remain in its current location within the Dashboard component",
-    "All new fields must be visible to both admin and investor roles",
-    "The e-project dropdown must use the exact secoinfi-apps list already defined in the system",
-    "The Mode dropdown must contain exactly four options: GPay, Crypto, CBDC, Wallets",
-    "The WhatsApp link must be: https://wa.me/919620058644",
-    "The Ethereum address must be: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7",
-    "The UPI ID must be: secoin@uboi"
+    "Maintain existing markdown parsing functionality in the Features component",
+    "Do not modify the backend file upload implementation",
+    "Preserve existing pagination and search features in the Features tab"
   ],
   "nonGoals": [
-    "Modifying the transaction form or transaction creation flow",
-    "Adding admin-specific controls to the expanded form",
-    "Changing the visual layout or position of the Dashboard",
-    "Implementing payment processing or verification logic",
-    "Adding validation for the Ethereum address or UPI ID format"
+    "Changing the file format support beyond markdown",
+    "Modifying the Features/Functions data structure",
+    "Redesigning the overall Features component layout"
   ],
   "imageRequirements": {
     "required": [],

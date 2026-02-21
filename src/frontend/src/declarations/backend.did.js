@@ -59,6 +59,12 @@ export const UserProfile = IDL.Record({
   'role' : IDL.Text,
   'email' : IDL.Text,
 });
+export const Resource = IDL.Record({
+  'id' : IDL.Nat,
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+});
+export const ResourcesPageContent = IDL.Record({ 'content' : IDL.Text });
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -113,6 +119,8 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getLatestSessionHashes' : IDL.Func([], [IDL.Opt(SessionState)], ['query']),
+  'getResource' : IDL.Func([IDL.Nat], [IDL.Opt(Resource)], ['query']),
+  'getResourcesPageContent' : IDL.Func([], [ResourcesPageContent], []),
   'getSessionIdReturn' : IDL.Func([IDL.Null], [IDL.Opt(IDL.Text)], ['query']),
   'getSessionState' : IDL.Func([IDL.Text], [IDL.Opt(SessionState)], ['query']),
   'getSessionTxnHashes' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
@@ -182,6 +190,12 @@ export const idlFactory = ({ IDL }) => {
     'role' : IDL.Text,
     'email' : IDL.Text,
   });
+  const Resource = IDL.Record({
+    'id' : IDL.Nat,
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+  });
+  const ResourcesPageContent = IDL.Record({ 'content' : IDL.Text });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
@@ -236,6 +250,8 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getLatestSessionHashes' : IDL.Func([], [IDL.Opt(SessionState)], ['query']),
+    'getResource' : IDL.Func([IDL.Nat], [IDL.Opt(Resource)], ['query']),
+    'getResourcesPageContent' : IDL.Func([], [ResourcesPageContent], []),
     'getSessionIdReturn' : IDL.Func([IDL.Null], [IDL.Opt(IDL.Text)], ['query']),
     'getSessionState' : IDL.Func(
         [IDL.Text],

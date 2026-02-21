@@ -1,22 +1,27 @@
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetCallerUserProfile, useGetInvestmentList, useGetSessionTxnHashes, useGetLatestSessionHashes } from '../hooks/useQueries';
+import { useGetCallerUserProfile, useGetInvestmentList, useGetSessionTxnHashes, useGetLatestSessionHashes, useGetAllInvestments } from '../hooks/useQueries';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import InvestmentCard from './InvestmentCard';
 import InvestmentForm from './InvestmentForm';
-import { Wallet, TrendingUp, Activity } from 'lucide-react';
+import { Wallet, TrendingUp, Activity, LogIn } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
+import LoginButton from './LoginButton';
 
 export default function Dashboard() {
   const { identity } = useInternetIdentity();
   const navigate = useNavigate();
   const { data: userProfile } = useGetCallerUserProfile();
   const { data: investments = [], isLoading: investmentsLoading } = useGetInvestmentList(identity?.getPrincipal() || null);
+  const { data: allInvestments = [] } = useGetAllInvestments();
   const { data: sessionHashes = [] } = useGetSessionTxnHashes();
   const { data: latestSessionState } = useGetLatestSessionHashes();
 
-  const totalInvestments = investments.length;
-  const totalTransactions = investments.reduce((sum, inv) => sum + (inv.created_at ? 1 : 0), 0);
+  const isAuthenticated = !!identity;
+  const totalInvestments = isAuthenticated ? investments.length : allInvestments.length;
+  const totalTransactions = isAuthenticated 
+    ? investments.reduce((sum, inv) => sum + (inv.created_at ? 1 : 0), 0)
+    : allInvestments.reduce((sum, inv) => sum + (inv.created_at ? 1 : 0), 0);
 
   const isInvestor = userProfile?.role === 'INVESTOR';
 
@@ -25,11 +30,15 @@ export default function Dashboard() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-4xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground mt-2">Welcome back, {userProfile?.name || 'User'}</p>
+          <p className="text-muted-foreground mt-2">
+            {isAuthenticated ? `Welcome back, ${userProfile?.name || 'User'}` : 'Welcome to Crowd-AI-Fund'}
+          </p>
         </div>
-        <Badge variant="outline" className="text-sm px-4 py-2">
-          {userProfile?.role || 'USER'}
-        </Badge>
+        {isAuthenticated && userProfile && (
+          <Badge variant="outline" className="text-sm px-4 py-2">
+            {userProfile.role}
+          </Badge>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
@@ -40,7 +49,9 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalInvestments}</div>
-            <p className="text-xs text-muted-foreground">Active investment portfolios</p>
+            <p className="text-xs text-muted-foreground">
+              {isAuthenticated ? 'Your investment portfolios' : 'Platform investments'}
+            </p>
           </CardContent>
         </Card>
 
@@ -55,19 +66,21 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Session Buffer</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{sessionHashes.length}</div>
-            <p className="text-xs text-muted-foreground">Pending transaction hashes</p>
-          </CardContent>
-        </Card>
+        {isAuthenticated && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Session Buffer</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{sessionHashes.length}</div>
+              <p className="text-xs text-muted-foreground">Pending transaction hashes</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {isInvestor && (
+      {isAuthenticated && isInvestor && (
         <Card>
           <CardHeader>
             <CardTitle>Integrity & Session State</CardTitle>
@@ -125,45 +138,63 @@ export default function Dashboard() {
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Create New Investment</CardTitle>
-          <CardDescription>Add a new investment to your portfolio</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <InvestmentForm />
-        </CardContent>
-      </Card>
-
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Recent Investments</h2>
-          <button
-            onClick={() => navigate({ to: '/investments' })}
-            className="text-sm text-primary hover:underline"
-          >
-            View All
-          </button>
-        </div>
-
-        {investmentsLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          </div>
-        ) : investments.length === 0 ? (
+      {isAuthenticated ? (
+        <>
           <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">No investments yet. Create your first investment above.</p>
+            <CardHeader>
+              <CardTitle>Create New Investment</CardTitle>
+              <CardDescription>Add a new investment to your portfolio</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <InvestmentForm />
             </CardContent>
           </Card>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {investments.slice(0, 6).map((investment) => (
-              <InvestmentCard key={investment.id} investment={investment} />
-            ))}
+
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Recent Investments</h2>
+              <button
+                onClick={() => navigate({ to: '/investments' })}
+                className="text-sm text-primary hover:underline"
+              >
+                View All
+              </button>
+            </div>
+
+            {investmentsLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+              </div>
+            ) : investments.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <p className="text-muted-foreground">No investments yet. Create your first investment above.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {investments.slice(0, 6).map((investment) => (
+                  <InvestmentCard key={investment.id} investment={investment} />
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <Card>
+          <CardContent className="py-16 text-center space-y-6">
+            <LogIn className="h-16 w-16 text-muted-foreground mx-auto" />
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold">Login to Create Investments</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                To create and manage investments, please log in with your Internet Identity. 
+                You can view public investment data without logging in.
+              </p>
+            </div>
+            <LoginButton />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

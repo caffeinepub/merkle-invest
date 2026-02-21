@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-investmentform-component-add-an-e-project-dropdown-field-positioned-immediately-after-the-description-field-populate-this-dropdown-with-all-secoinfi-apps-options-that-are-currently-defined-in-the-backend-the-38-options-from-the-e-project-list-the-dropdown-should-be-required-and-visible-to-all-users-not-just-admins",
-      "featureTitle": "In the InvestmentForm component, add an e-project dropdown field positioned immediately after the 'Description' field. Populate this dropdown with all secoinfi-apps options that are currently defined in the backend (the 38 options from the e-project list). The dropdown should be required and visible to all users, not just admins.",
+      "featureId": "feature-fix-the-upload-button-in-the-features-component-so-it-responds-correctly-when-clicked-and-does-not-just-flicker",
+      "featureTitle": "Fix the upload button in the Features component so it responds correctly when clicked and does not just flicker",
       "files": [
-        "frontend/src/components/InvestmentForm.tsx"
+        "frontend/src/components/Features.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -21,10 +21,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-mode-select-dropdown-in-the-investmentform-component-after-the-e-project-dropdown-this-dropdown-must-contain-exactly-four-options-gpay-crypto-cbdc-and-wallets-the-field-should-be-required-and-visible-to-all-users",
-      "featureTitle": "Add a 'Mode' select dropdown in the InvestmentForm component after the e-project dropdown. This dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. The field should be required and visible to all users.",
+      "featureId": "feature-add-upload-progress-indicator-showing-percentage-completion-during-file-upload-in-the-features-component",
+      "featureTitle": "Add upload progress indicator showing percentage completion during file upload in the Features component",
       "files": [
-        "frontend/src/components/InvestmentForm.tsx"
+        "frontend/src/components/Features.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -40,10 +40,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-two-transaction-id-input-fields-in-the-investmentform-component-after-the-mode-dropdown-1-txn-id-nat-as-a-required-numeric-input-field-accepting-only-natural-numbers-and-2-txn-id-string-as-an-optional-text-input-field-both-fields-should-be-visible-to-all-users",
-      "featureTitle": "Add two transaction ID input fields in the InvestmentForm component after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field accepting only natural numbers, and (2) 'Txn ID (String)' as an optional text input field. Both fields should be visible to all users.",
+      "featureId": "feature-display-success-or-error-status-message-after-file-upload-completes-in-the-features-component",
+      "featureTitle": "Display success or error status message after file upload completes in the Features component",
       "files": [
-        "frontend/src/components/InvestmentForm.tsx"
+        "frontend/src/components/Features.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -55,25 +55,6 @@
       ],
       "testIds": [
         "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-payment-notice-section-in-the-investmentform-component-after-the-transaction-id-fields-display-the-following-information-upi-id-secoin-uboi-whatsapp-contact-link-https-wa-me-919620058644-and-ethereum-address-0x4a100e184ac1f17491fbbcf549cebfb676694ef7-format-this-as-an-informational-notice-box-visible-to-all-users",
-      "featureTitle": "Add a payment notice section in the InvestmentForm component after the transaction ID fields. Display the following information: UPI ID 'secoin@uboi', WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Format this as an informational notice box visible to all users.",
-      "files": [
-        "frontend/src/components/InvestmentForm.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
       ],
       "confidence": "high"
     }

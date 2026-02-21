@@ -7,28 +7,6 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export interface SessionState {
-    session_id: string;
-    user_id: Principal;
-    timestamp: bigint;
-    finalRootHash: string;
-}
-export interface Investment {
-    id: string;
-    txnIdText?: string;
-    mode: string;
-    name: string;
-    eProject?: string;
-    description: string;
-    created_at: bigint;
-    txnIdNat: bigint;
-    investor: Principal;
-}
-export interface UserProfile {
-    name: string;
-    role: string;
-    email: string;
-}
 export interface Transaction {
     id: string;
     transaction_type: TransactionType;
@@ -42,6 +20,36 @@ export interface Transaction {
     timestamp: bigint;
     txnIdNat: bigint;
     amount: bigint;
+}
+export interface Resource {
+    id: bigint;
+    title: string;
+    content: string;
+}
+export interface Investment {
+    id: string;
+    txnIdText?: string;
+    mode: string;
+    name: string;
+    eProject?: string;
+    description: string;
+    created_at: bigint;
+    txnIdNat: bigint;
+    investor: Principal;
+}
+export interface ResourcesPageContent {
+    content: string;
+}
+export interface SessionState {
+    session_id: string;
+    user_id: Principal;
+    timestamp: bigint;
+    finalRootHash: string;
+}
+export interface UserProfile {
+    name: string;
+    role: string;
+    email: string;
 }
 export enum TransactionType {
     returnFunds = "returnFunds",
@@ -72,6 +80,8 @@ export interface backendInterface {
     getInvestmentTransactions(investment_id: string): Promise<Array<Transaction>>;
     getInvestorTransactions(investor_id: Principal): Promise<Array<Transaction>>;
     getLatestSessionHashes(): Promise<SessionState | null>;
+    getResource(id: bigint): Promise<Resource | null>;
+    getResourcesPageContent(): Promise<ResourcesPageContent>;
     getSessionIdReturn(arg0: null): Promise<string | null>;
     getSessionState(session_id: string): Promise<SessionState | null>;
     getSessionTxnHashes(): Promise<Array<string>>;

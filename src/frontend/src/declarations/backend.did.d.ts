@@ -21,6 +21,12 @@ export interface Investment {
   'txnIdNat' : bigint,
   'investor' : Principal,
 }
+export interface Resource {
+  'id' : bigint,
+  'title' : string,
+  'content' : string,
+}
+export interface ResourcesPageContent { 'content' : string }
 export interface SessionState {
   'session_id' : string,
   'user_id' : Principal,
@@ -88,6 +94,8 @@ export interface _SERVICE {
   'getInvestmentTransactions' : ActorMethod<[string], Array<Transaction>>,
   'getInvestorTransactions' : ActorMethod<[Principal], Array<Transaction>>,
   'getLatestSessionHashes' : ActorMethod<[], [] | [SessionState]>,
+  'getResource' : ActorMethod<[bigint], [] | [Resource]>,
+  'getResourcesPageContent' : ActorMethod<[], ResourcesPageContent>,
   'getSessionIdReturn' : ActorMethod<[null], [] | [string]>,
   'getSessionState' : ActorMethod<[string], [] | [SessionState]>,
   'getSessionTxnHashes' : ActorMethod<[], Array<string>>,

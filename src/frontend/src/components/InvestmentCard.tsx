@@ -1,22 +1,26 @@
 import { useState } from 'react';
 import { Investment } from '../backend';
 import { useGetInvestmentTransactions } from '../hooks/useQueries';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import TransactionForm from './TransactionForm';
 import TransactionList from './TransactionList';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Wallet, Calendar } from 'lucide-react';
+import { Plus, Wallet, Calendar, Lock } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface InvestmentCardProps {
   investment: Investment;
 }
 
 export default function InvestmentCard({ investment }: InvestmentCardProps) {
+  const { identity } = useInternetIdentity();
   const { data: transactions, isLoading } = useGetInvestmentTransactions(investment.id);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const isAuthenticated = !!identity;
   const transactionTotal = transactions?.reduce((sum, txn) => sum + Number(txn.amount), 0) || 0;
 
   const formatDate = (timestamp: bigint) => {
@@ -26,6 +30,14 @@ export default function InvestmentCard({ investment }: InvestmentCardProps) {
       month: 'short', 
       day: 'numeric'
     });
+  };
+
+  const handleAddTransactionClick = () => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to add transactions');
+      return;
+    }
+    setIsDialogOpen(true);
   };
 
   return (
@@ -56,23 +68,35 @@ export default function InvestmentCard({ investment }: InvestmentCardProps) {
               <Calendar className="h-4 w-4" />
               <span>Created {formatDate(investment.created_at)}</span>
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full gap-2" variant="outline">
-                  <Plus className="h-4 w-4" />
-                  Add Transaction
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>New Transaction for {investment.name}</DialogTitle>
-                </DialogHeader>
-                <TransactionForm
-                  investmentId={investment.id}
-                  onSuccess={() => setIsDialogOpen(false)}
-                />
-              </DialogContent>
-            </Dialog>
+            {isAuthenticated ? (
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full gap-2" variant="outline">
+                    <Plus className="h-4 w-4" />
+                    Add Transaction
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>New Transaction for {investment.name}</DialogTitle>
+                  </DialogHeader>
+                  <TransactionForm
+                    investmentId={investment.id}
+                    onSuccess={() => setIsDialogOpen(false)}
+                  />
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <Button 
+                className="w-full gap-2" 
+                variant="outline" 
+                disabled
+                onClick={handleAddTransactionClick}
+              >
+                <Lock className="h-4 w-4" />
+                Login to Add Transaction
+              </Button>
+            )}
           </TabsContent>
           <TabsContent value="transactions" className="space-y-4">
             {isLoading ? (

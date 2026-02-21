@@ -2,7 +2,7 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useGetCallerUserProfile } from '../hooks/useQueries';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import LoginButton from './LoginButton';
-import { TrendingUp, LayoutDashboard, Wallet, Receipt } from 'lucide-react';
+import { TrendingUp, LayoutDashboard, Wallet, Receipt, BookOpen, List } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -38,26 +38,44 @@ export default function Header() {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            {identity && userProfile && (
-              <nav className="hidden md:flex items-center gap-2">
-                <Button
-                  variant={currentPath === '/' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => navigate({ to: '/' })}
-                  className="gap-2"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
-                </Button>
-                <Button
-                  variant={currentPath === '/investments' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => navigate({ to: '/investments' })}
-                  className="gap-2"
-                >
-                  <Wallet className="h-4 w-4" />
-                  Investments
-                </Button>
+            <nav className="hidden md:flex items-center gap-2">
+              <Button
+                variant={currentPath === '/' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate({ to: '/' })}
+                className="gap-2"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </Button>
+              <Button
+                variant={currentPath === '/investments' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate({ to: '/investments' })}
+                className="gap-2"
+              >
+                <Wallet className="h-4 w-4" />
+                Investments
+              </Button>
+              <Button
+                variant={currentPath === '/resources' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate({ to: '/resources' })}
+                className="gap-2"
+              >
+                <BookOpen className="h-4 w-4" />
+                Resources
+              </Button>
+              <Button
+                variant={currentPath === '/features' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => navigate({ to: '/features' })}
+                className="gap-2"
+              >
+                <List className="h-4 w-4" />
+                Features/Functions:
+              </Button>
+              {identity && userProfile && (
                 <Button
                   variant={currentPath === '/transactions' ? 'default' : 'ghost'}
                   size="sm"
@@ -67,8 +85,8 @@ export default function Header() {
                   <Receipt className="h-4 w-4" />
                   Transactions
                 </Button>
-              </nav>
-            )}
+              )}
+            </nav>
             <LoginButton />
           </div>
         </div>

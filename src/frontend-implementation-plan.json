@@ -1,92 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Expand Create Investment Form with E-Project, Payment Mode, Transaction IDs, and Payment Notice",
+  "title": "Fix upload button flickering and add progress indicator",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add e-project dropdown field to InvestmentForm after Description field, populated with all 38 secoinfi-apps options, required and visible to all users",
+      "summary": "Fix the upload button in the Features component so it responds correctly when clicked and does not just flicker",
       "acceptanceCriteria": [
-        "E-project dropdown appears after Description field in InvestmentForm",
-        "Dropdown contains all 38 secoinfi-apps options",
-        "Field is visible to all users (admin and investor roles)",
-        "Field is required for form submission"
+        "Upload button triggers file upload when clicked",
+        "Button does not flicker or display inconsistent visual states",
+        "File selection dialog opens successfully"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/InvestmentForm.tsx",
+          "path": "frontend/src/components/Features.tsx",
           "operation": "modify",
-          "description": "Add e-project dropdown field positioned after the Description field. Use the existing 37 e-project options from the admin dropdown plus one additional option to reach 38 total secoinfi-apps options. Make the field required and visible to all users (remove admin-only restriction for this field). Ensure the dropdown state is captured and included in the createInvestment mutation call."
+          "description": "Fix the upload button click handler to prevent flickering by properly managing the file input element's state and event handling. Ensure the file input ref is correctly wired to trigger file selection dialog when the button is clicked. Remove any conflicting event handlers or state updates that cause visual inconsistencies."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add Mode select dropdown with exactly four options (GPay, Crypto, CBDC, Wallets) after e-project field, required and visible to all users",
+      "summary": "Add upload progress indicator showing percentage completion during file upload in the Features component",
       "acceptanceCriteria": [
-        "Mode dropdown appears after e-project field",
-        "Dropdown contains exactly: GPay, Crypto, CBDC, Wallets",
-        "Field is required for form submission",
-        "Field is visible to all users"
+        "Progress percentage is displayed during file upload",
+        "Progress indicator updates in real-time as upload progresses",
+        "Progress reaches 100% when upload completes successfully",
+        "User receives clear feedback throughout the upload process"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/InvestmentForm.tsx",
+          "path": "frontend/src/components/Features.tsx",
           "operation": "modify",
-          "description": "Add a Mode select dropdown positioned after the e-project dropdown field. The dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. Make the field required and ensure it is visible to all users. Capture the selected mode value and include it in the createInvestment mutation call."
+          "description": "Add upload progress state tracking with percentage value (0-100). Implement FileReader progress event handler to update progress state during file reading. Add UI component displaying the progress percentage with visual indicator (progress bar or percentage text). Ensure progress resets after successful upload or error."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Add two transaction ID input fields after Mode dropdown: Txn ID (Nat) as required numeric field and Txn ID (String) as optional text field, visible to all users",
+      "summary": "Display success or error status message after file upload completes in the Features component",
       "acceptanceCriteria": [
-        "Txn ID (Nat) field accepts only numeric input",
-        "Txn ID (Nat) is required",
-        "Txn ID (String) field accepts text input",
-        "Txn ID (String) is optional",
-        "Both fields are visible to all users"
+        "Success message displays when upload completes successfully",
+        "Error message displays if upload fails",
+        "Status message is clearly visible to the user"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/InvestmentForm.tsx",
+          "path": "frontend/src/components/Features.tsx",
           "operation": "modify",
-          "description": "Add two transaction ID input fields positioned after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field that accepts only natural numbers (use type='number' with min='0' and step='1'), and (2) 'Txn ID (String)' as an optional text input field. Ensure both fields are visible to all users. Convert the Nat value to BigInt when calling createInvestment, and pass the string value as-is or null if empty."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Add payment notice section after transaction ID fields displaying UPI ID, WhatsApp link, and Ethereum address in an informational box visible to all users",
-      "acceptanceCriteria": [
-        "Notice displays UPI ID: secoin@uboi",
-        "Notice includes clickable WhatsApp link to +91 96200 58644",
-        "Notice displays Ethereum address: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7",
-        "Notice is styled as an informational box",
-        "Notice is visible to all users"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/InvestmentForm.tsx",
-          "operation": "modify",
-          "description": "Add a payment notice section positioned after the transaction ID fields. Display the following information in an informational notice box: UPI ID 'secoin@uboi', a clickable WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Use a Card or Alert component from shadcn/ui to style the notice box with appropriate info styling (e.g., blue/info variant). Ensure the notice is visible to all users."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Ensure expanded InvestmentForm with all new fields is visible and accessible to all authenticated users in Dashboard, removing any admin-only restrictions on form visibility",
-      "acceptanceCriteria": [
-        "InvestmentForm is visible on Dashboard for all authenticated users",
-        "No admin-only conditional rendering wraps the form",
-        "Form remains in its current position in the Dashboard",
-        "All new fields are accessible to investor and admin roles"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Review and remove any admin-only conditional rendering that wraps the InvestmentForm component. Ensure the form is visible to all authenticated users (both admin and investor roles). The form should remain in its current position within the Dashboard layout. If there is currently role-based visibility logic, remove or adjust it so that all authenticated users can see and interact with the expanded InvestmentForm."
+          "description": "Add upload status state to track success/error states. Implement error handling in the file upload handler to catch parsing failures or file reading errors. Display success message when markdown file is successfully parsed and features are loaded. Display error message with appropriate context when upload fails. Ensure status messages are cleared when starting a new upload."
         }
       ]
     }

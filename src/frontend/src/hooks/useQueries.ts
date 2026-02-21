@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, Investment, Transaction, SessionState } from '../backend';
+import type { UserProfile, Investment, Transaction, SessionState, ResourcesPageContent, Resource } from '../backend';
 import { Principal } from '@dfinity/principal';
 
 export function useGetCallerUserProfile() {
@@ -256,5 +256,31 @@ export function useSetSessionIdReturn() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sessionIdReturn'] });
     },
+  });
+}
+
+export function useGetResourcesPageContent() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<ResourcesPageContent>({
+    queryKey: ['resourcesPageContent'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getResourcesPageContent();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetResource(id: bigint | null) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Resource | null>({
+    queryKey: ['resource', id?.toString()],
+    queryFn: async () => {
+      if (!actor || id === null) return null;
+      return actor.getResource(id);
+    },
+    enabled: !!actor && !isFetching && id !== null,
   });
 }

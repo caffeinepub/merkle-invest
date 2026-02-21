@@ -89,28 +89,6 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface SessionState {
-    session_id: string;
-    user_id: Principal;
-    timestamp: bigint;
-    finalRootHash: string;
-}
-export interface Investment {
-    id: string;
-    txnIdText?: string;
-    mode: string;
-    name: string;
-    eProject?: string;
-    description: string;
-    created_at: bigint;
-    txnIdNat: bigint;
-    investor: Principal;
-}
-export interface UserProfile {
-    name: string;
-    role: string;
-    email: string;
-}
 export interface Transaction {
     id: string;
     transaction_type: TransactionType;
@@ -124,6 +102,36 @@ export interface Transaction {
     timestamp: bigint;
     txnIdNat: bigint;
     amount: bigint;
+}
+export interface Resource {
+    id: bigint;
+    title: string;
+    content: string;
+}
+export interface Investment {
+    id: string;
+    txnIdText?: string;
+    mode: string;
+    name: string;
+    eProject?: string;
+    description: string;
+    created_at: bigint;
+    txnIdNat: bigint;
+    investor: Principal;
+}
+export interface ResourcesPageContent {
+    content: string;
+}
+export interface SessionState {
+    session_id: string;
+    user_id: Principal;
+    timestamp: bigint;
+    finalRootHash: string;
+}
+export interface UserProfile {
+    name: string;
+    role: string;
+    email: string;
 }
 export enum TransactionType {
     returnFunds = "returnFunds",
@@ -155,6 +163,8 @@ export interface backendInterface {
     getInvestmentTransactions(investment_id: string): Promise<Array<Transaction>>;
     getInvestorTransactions(investor_id: Principal): Promise<Array<Transaction>>;
     getLatestSessionHashes(): Promise<SessionState | null>;
+    getResource(id: bigint): Promise<Resource | null>;
+    getResourcesPageContent(): Promise<ResourcesPageContent>;
     getSessionIdReturn(arg0: null): Promise<string | null>;
     getSessionState(session_id: string): Promise<SessionState | null>;
     getSessionTxnHashes(): Promise<Array<string>>;
@@ -165,7 +175,7 @@ export interface backendInterface {
     setSessionIdReturn(id: string, nonce: string): Promise<void>;
     updateLatestSessionHashes(sessionState: SessionState): Promise<void>;
 }
-import type { Investment as _Investment, SessionState as _SessionState, Transaction as _Transaction, TransactionType as _TransactionType, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Investment as _Investment, Resource as _Resource, SessionState as _SessionState, Transaction as _Transaction, TransactionType as _TransactionType, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -364,6 +374,34 @@ export class Backend implements backendInterface {
             return from_candid_opt_n19(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getResource(arg0: bigint): Promise<Resource | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getResource(arg0);
+                return from_candid_opt_n20(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getResource(arg0);
+            return from_candid_opt_n20(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getResourcesPageContent(): Promise<ResourcesPageContent> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getResourcesPageContent();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getResourcesPageContent();
+            return result;
+        }
+    }
     async getSessionIdReturn(arg0: null): Promise<string | null> {
         if (this.processError) {
             try {
@@ -410,14 +448,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getTransaction(arg0);
-                return from_candid_opt_n20(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n21(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTransaction(arg0);
-            return from_candid_opt_n20(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n21(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
@@ -512,7 +550,10 @@ function from_candid_opt_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function from_candid_opt_n19(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SessionState]): SessionState | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Transaction]): Transaction | null {
+function from_candid_opt_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Resource]): Resource | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n21(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Transaction]): Transaction | null {
     return value.length === 0 ? null : from_candid_Transaction_n11(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
