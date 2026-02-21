@@ -1,61 +1,45 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Investment management platform with deposit tracking for e-projects and multi-mode payment verification",
+  "summary": "Investment platform with enhanced create investment form supporting multiple payment modes and e-project selection",
   "architectural_notes": [
-    "Admin-only access for appending e-project deposit options",
-    "Multi-mode payment tracking: GPay, Crypto, CBDC, Wallets",
-    "Dual transaction ID fields: NatValue (required) and stringValue (optional)",
-    "Payment verification flow: UPI (secoin@uboi) + WhatsApp notification + Ethereum ERC20 deposits"
+    "Investment form supports multiple payment modes: GPay, Crypto, CBDC, Wallets",
+    "E-project selection dropdown populated with secoinfi-apps options",
+    "Form accessible to all users (investors/subscribers) without per-account admin changes",
+    "Payment details: UPI secoin@uboi, WhatsApp +919620058644, ETH 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7"
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-default-deposits-on-e-projects-dropdown-field-in-the-investmentform-component-with-the-following-38-secoinfi-apps-options-e-contract-lwf-e-contracts-bqe-etutorial-lgc-etutorials-cso-evolved-ai-o6e-forms-sxn-geo-map-w9s-golden-sec-vri-ia-niqaw-947-icp-cloud-storage-hvk-infi-loop-1au-infytask-mia-ipfs-lrm-key-unlock-5hx-map-56b-moap-app-6ag-multi-apps-unify-app-hbc-n8n-tasks-c2i-n8n-workflows-6sy-networth-htm-op-hotels-rests-ae0-pvt-projects-7wo-sec-build-0bj-sec-epay-am0-sec-jewelry-j03-secoin-ep6-sitemap-hub-fe2-sitemap-hub-sy0-sitemap-nya-sitemap-subs-app-j3h-sitemaps-fwh-sudeep-hotels-eu8-terror-uproot-97d-trends-63c-trends-d1l-voice-invoice-au1-xcaller-0aw-yo-data-app-o7u-this-dropdown-should-only-be-accessible-and-visible-to-users-with-admin-role",
-      "title": "Add a 'Default Deposits on e-Projects' dropdown field in the InvestmentForm component with the following 38 secoinfi-apps options: e-contract-lwf, e-contracts-bqe, etutorial-lgc, etutorials-cso, evolved-ai-o6e, forms-sxn, geo-map-w9s, golden-sec-vri, ia-niqaw-947, icp-cloud-storage-hvk, infi-loop-1au, infytask-mia, ipfs-lrm, key-unlock-5hx, map-56b, moap-app-6ag, multi-apps-unify-app-hbc, n8n-tasks-c2i, n8n-workflows-6sy, networth-htm, op-hotels-rests-ae0, pvt-projects-7wo, sec-build-0bj, sec-epay-am0, sec-jewelry-j03, secoin-ep6, sitemap-hub-fe2, sitemap-hub-sy0, sitemap-nya, sitemap-subs-app-j3h, sitemaps-fwh, sudeep-hotels-eu8, terror-uproot-97d, trends-63c, trends-d1l, voice-invoice-au1, xcaller-0aw, yo-data-app-o7u. This dropdown should only be accessible and visible to users with ADMIN role.",
+      "id": "feature-in-the-investmentform-component-add-an-e-project-dropdown-field-positioned-immediately-after-the-description-field-populate-this-dropdown-with-all-secoinfi-apps-options-that-are-currently-defined-in-the-backend-the-38-options-from-the-e-project-list-the-dropdown-should-be-required-and-visible-to-all-users-not-just-admins",
+      "title": "In the InvestmentForm component, add an e-project dropdown field positioned immediately after the 'Description' field. Populate this dropdown with all secoinfi-apps options that are currently defined in the backend (the 38 options from the e-project list). The dropdown should be required and visible to all users, not just admins.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-mode-dropdown-field-to-transactionform-with-options-gpay-crypto-cbdc-wallets-this-field-should-be-required-for-all-fund-transactions",
-      "title": "Add a 'Mode' dropdown field to TransactionForm with options: GPay, Crypto, CBDC, Wallets. This field should be required for all fund transactions.",
+      "id": "feature-add-a-mode-select-dropdown-in-the-investmentform-component-after-the-e-project-dropdown-this-dropdown-must-contain-exactly-four-options-gpay-crypto-cbdc-and-wallets-the-field-should-be-required-and-visible-to-all-users",
+      "title": "Add a 'Mode' select dropdown in the InvestmentForm component after the e-project dropdown. This dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. The field should be required and visible to all users.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-two-transaction-id-input-fields-in-the-investmentform-component-after-the-mode-dropdown-1-txn-id-nat-as-a-required-numeric-input-field-accepting-only-natural-numbers-and-2-txn-id-string-as-an-optional-text-input-field-both-fields-should-be-visible-to-all-users",
+      "title": "Add two transaction ID input fields in the InvestmentForm component after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field accepting only natural numbers, and (2) 'Txn ID (String)' as an optional text input field. Both fields should be visible to all users.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-two-transaction-id-fields-to-transactionform-a-required-txn-id-numeric-input-field-nat-type-and-an-optional-txn-id-text-text-input-field",
-      "title": "Add two transaction ID fields to TransactionForm: a required 'Txn ID' numeric input field (Nat type) and an optional 'Txn ID (Text)' text input field.",
+      "id": "feature-add-a-payment-notice-section-in-the-investmentform-component-after-the-transaction-id-fields-display-the-following-information-upi-id-secoin-uboi-whatsapp-contact-link-https-wa-me-919620058644-and-ethereum-address-0x4a100e184ac1f17491fbbcf549cebfb676694ef7-format-this-as-an-informational-notice-box-visible-to-all-users",
+      "title": "Add a payment notice section in the InvestmentForm component after the transaction ID fields. Display the following information: UPI ID 'secoin@uboi', WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Format this as an informational notice box visible to all users.",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-display-a-prominent-notice-in-transactionform-that-reads-after-successful-deposit-to-our-upi-a-c-secoin-uboi-pl-verify-the-trn-id-by-submitting-details-here-send-a-copy-by-chat-to-https-wa-me-919620058644-include-crypto-deposits-receipts-as-txn-id-after-sending-ethereum-on-erc20-mainnet-to-our-eth-id-0x4a100e184ac1f17491fbbcf549cebfb676694ef7-pl-recheck-verify-if-details-to-be-submitted-is-correct",
-      "title": "Display a prominent notice in TransactionForm that reads: 'After successful Deposit to Our UPI A/c: secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644. Include Crypto Deposits receipts as Txn ID after sending Ethereum on ERC20 Mainnet to Our Eth ID: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7. Pl. Recheck & Verify if Details to be Submitted is Correct.'",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-confirmation-dialog-or-review-step-in-transactionform-that-displays-all-entered-transaction-details-before-final-submission-allowing-users-to-verify-the-information-is-correct",
-      "title": "Add a confirmation dialog or review step in TransactionForm that displays all entered transaction details before final submission, allowing users to verify the information is correct.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-transactionlist-and-transactionslist-components-to-display-the-new-transaction-fields-mode-numeric-transaction-id-and-text-transaction-id-when-present",
-      "title": "Update TransactionList and TransactionsList components to display the new transaction fields: mode, numeric transaction ID, and text transaction ID (when present).",
-      "reqIds": [
-        "REQ-8"
       ],
       "version": 1
     }
@@ -63,46 +47,52 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add Default Deposits on e-Projects dropdown with secoinfi-apps list (admin-only)",
+      "summary": "Add e-project dropdown to create investment form with secoinfi-apps options",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Add transaction mode field (GPay/Crypto/CBDC/Wallets) and Txn ID fields (NatValue + optional stringValue)",
+      "summary": "Add payment mode selector (GPay, Crypto, CBDC, Wallets) to investment form",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Display deposit verification notice with UPI (secoin@uboi), WhatsApp contact, and Ethereum address (0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7)",
+      "summary": "Add transaction ID fields (Nat and optional string) to investment form",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Add submission verification/confirmation step before final submit",
+      "summary": "Display payment notice with UPI, WhatsApp, and Ethereum address in investment form",
       "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-6",
-      "summary": "Store the selected e-project value in the backend Investment type by adding an eProject field of type ?Text to the Investment record in main.mo.",
-      "reqIds": [
-        "REQ-2"
-      ],
+      "id": "AR-5",
+      "summary": "Make investment form visible to all users without admin modification requirement",
+      "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-9",
-      "summary": "Update the Transaction type in main.mo to include three new fields: mode of type Text, txnIdNat of type Nat, and txnIdText of type ?Text.",
+      "id": "AR-10",
+      "summary": "Ensure the expanded InvestmentForm with all new fields (e-project dropdown, Mode select, transaction ID fields, and payment notice) is visible and accessible to all authenticated users in the Dashboard component, not just admins. Remove any admin-only restrictions on form visibility while maintaining the form's position in the existing Dashboard layout.",
       "reqIds": [
         "REQ-5"
       ],
       "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Update the backend main.mo createInvestment function to accept and store the new fields from the expanded form: e-project selection (text), mode (text), transaction ID as Nat (numeric), and optional transaction ID as string. Ensure the Investment type includes these new fields.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
     }
   ],
-  "projectName": "Extend Create Investment with e-Projects Deposits and Multi-Mode Transaction Verification",
+  "projectName": "Expand Create Investment Form with E-Project, Payment Mode, Transaction IDs, and Payment Notice",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -97,10 +97,13 @@ export interface SessionState {
 }
 export interface Investment {
     id: string;
+    txnIdText?: string;
+    mode: string;
     name: string;
     eProject?: string;
     description: string;
     created_at: bigint;
+    txnIdNat: bigint;
     investor: Principal;
 }
 export interface UserProfile {
@@ -140,7 +143,7 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createInvestment(id: string, name: string, description: string, eProject: string | null): Promise<void>;
+    createInvestment(id: string, name: string, description: string, eProject: string | null, mode: string, txnIdNat: bigint, txnIdText: string | null): Promise<void>;
     createTransaction(id: string, investment_id: string, amount: bigint, transaction_type: TransactionType, txn_hash: string, sessionId: string, mode: string, txnIdNat: bigint, txnIdText: string | null): Promise<void>;
     getAllInvestments(): Promise<Array<Investment>>;
     getAllSessionStates(): Promise<Array<SessionState>>;
@@ -193,17 +196,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createInvestment(arg0: string, arg1: string, arg2: string, arg3: string | null): Promise<void> {
+    async createInvestment(arg0: string, arg1: string, arg2: string, arg3: string | null, arg4: string, arg5: bigint, arg6: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.createInvestment(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3));
+                const result = await this.actor.createInvestment(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), arg4, arg5, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createInvestment(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3));
+            const result = await this.actor.createInvestment(arg0, arg1, arg2, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg3), arg4, arg5, to_candid_opt_n3(this._uploadFile, this._downloadFile, arg6));
             return result;
         }
     }
@@ -559,25 +562,34 @@ function from_candid_record_n12(_uploadFile: (file: ExternalBlob) => Promise<Uin
 }
 function from_candid_record_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: string;
+    txnIdText: [] | [string];
+    mode: string;
     name: string;
     eProject: [] | [string];
     description: string;
     created_at: bigint;
+    txnIdNat: bigint;
     investor: Principal;
 }): {
     id: string;
+    txnIdText?: string;
+    mode: string;
     name: string;
     eProject?: string;
     description: string;
     created_at: bigint;
+    txnIdNat: bigint;
     investor: Principal;
 } {
     return {
         id: value.id,
+        txnIdText: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.txnIdText)),
+        mode: value.mode,
         name: value.name,
         eProject: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.eProject)),
         description: value.description,
         created_at: value.created_at,
+        txnIdNat: value.txnIdNat,
         investor: value.investor
     };
 }

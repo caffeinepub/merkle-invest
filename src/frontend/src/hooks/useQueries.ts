@@ -86,15 +86,29 @@ export function useCreateInvestment() {
       id, 
       name, 
       description, 
-      eProject 
+      eProject,
+      mode,
+      txnIdNat,
+      txnIdText
     }: { 
       id: string; 
       name: string; 
       description: string;
-      eProject?: string | null;
+      eProject: string | null;
+      mode: string;
+      txnIdNat: bigint;
+      txnIdText?: string | null;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.createInvestment(id, name, description, eProject || null);
+      return actor.createInvestment(
+        id, 
+        name, 
+        description, 
+        eProject, 
+        mode, 
+        txnIdNat, 
+        txnIdText || null
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['investments'] });

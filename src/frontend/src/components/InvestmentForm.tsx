@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { useCreateInvestment, useIsCallerAdmin } from '../hooks/useQueries';
+import { useCreateInvestment } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { Info, MessageCircle } from 'lucide-react';
 
 interface InvestmentFormProps {
   onSuccess?: () => void;
@@ -52,12 +54,16 @@ const E_PROJECTS = [
   "yo-data-app-o7u"
 ];
 
+const PAYMENT_MODES = ["GPay", "Crypto", "CBDC", "Wallets"];
+
 export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [eProject, setEProject] = useState<string>('');
+  const [mode, setMode] = useState<string>('');
+  const [txnIdNat, setTxnIdNat] = useState<string>('');
+  const [txnIdText, setTxnIdText] = useState<string>('');
   const createInvestment = useCreateInvestment();
-  const { data: isAdmin, isLoading: isAdminLoading } = useIsCallerAdmin();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,18 +73,45 @@ export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
       return;
     }
 
+    if (!eProject) {
+      toast.error('Please select an e-project');
+      return;
+    }
+
+    if (!mode) {
+      toast.error('Please select a payment mode');
+      return;
+    }
+
+    if (!txnIdNat.trim()) {
+      toast.error('Please enter a transaction ID (Nat)');
+      return;
+    }
+
+    const txnIdNatValue = parseInt(txnIdNat, 10);
+    if (isNaN(txnIdNatValue) || txnIdNatValue < 0) {
+      toast.error('Transaction ID (Nat) must be a valid positive number');
+      return;
+    }
+
     try {
       const id = `inv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       await createInvestment.mutateAsync({
         id,
         name: name.trim(),
         description: description.trim(),
-        eProject: eProject || null
+        eProject: eProject,
+        mode: mode,
+        txnIdNat: BigInt(txnIdNatValue),
+        txnIdText: txnIdText.trim() || null
       });
       toast.success('Investment created successfully!');
       setName('');
       setDescription('');
       setEProject('');
+      setMode('');
+      setTxnIdNat('');
+      setTxnIdText('');
       onSuccess?.();
     } catch (error) {
       console.error('Investment creation error:', error);
@@ -97,8 +130,10 @@ export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={createInvestment.isPending}
+          required
         />
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="investment-description">Description</Label>
         <Textarea
@@ -110,28 +145,109 @@ export default function InvestmentForm({ onSuccess }: InvestmentFormProps) {
           rows={3}
         />
       </div>
-      {isAdmin && !isAdminLoading && (
-        <div className="space-y-2">
-          <Label htmlFor="e-project">Default Deposits on e-Projects (Admin Only)</Label>
-          <Select
-            value={eProject}
-            onValueChange={setEProject}
-            disabled={createInvestment.isPending}
-          >
-            <SelectTrigger id="e-project">
-              <SelectValue placeholder="Select an e-project (optional)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">None</SelectItem>
-              {E_PROJECTS.map((project) => (
-                <SelectItem key={project} value={project}>
-                  {project}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="e-project">E-Project <span className="text-destructive">*</span></Label>
+        <Select
+          value={eProject}
+          onValueChange={setEProject}
+          disabled={createInvestment.isPending}
+          required
+        >
+          <SelectTrigger id="e-project">
+            <SelectValue placeholder="Select an e-project" />
+          </SelectTrigger>
+          <SelectContent>
+            {E_PROJECTS.map((project) => (
+              <SelectItem key={project} value={project}>
+                {project}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="mode">Mode <span className="text-destructive">*</span></Label>
+        <Select
+          value={mode}
+          onValueChange={setMode}
+          disabled={createInvestment.isPending}
+          required
+        >
+          <SelectTrigger id="mode">
+            <SelectValue placeholder="Select payment mode" />
+          </SelectTrigger>
+          <SelectContent>
+            {PAYMENT_MODES.map((paymentMode) => (
+              <SelectItem key={paymentMode} value={paymentMode}>
+                {paymentMode}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="txn-id-nat">Transaction ID (Nat) <span className="text-destructive">*</span></Label>
+        <Input
+          id="txn-id-nat"
+          type="number"
+          min="0"
+          step="1"
+          placeholder="Enter numeric transaction ID"
+          value={txnIdNat}
+          onChange={(e) => setTxnIdNat(e.target.value)}
+          disabled={createInvestment.isPending}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="txn-id-text">Transaction ID (String) <span className="text-muted-foreground text-xs">(Optional)</span></Label>
+        <Input
+          id="txn-id-text"
+          type="text"
+          placeholder="Enter text transaction ID (optional)"
+          value={txnIdText}
+          onChange={(e) => setTxnIdText(e.target.value)}
+          disabled={createInvestment.isPending}
+        />
+      </div>
+
+      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+        <CardContent className="pt-6">
+          <div className="flex gap-3">
+            <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <div className="space-y-2 text-sm">
+              <p className="font-semibold text-blue-900 dark:text-blue-100">Payment Information</p>
+              <div className="space-y-1 text-blue-800 dark:text-blue-200">
+                <p><span className="font-medium">UPI ID:</span> secoin@uboi</p>
+                <p className="flex items-center gap-2">
+                  <span className="font-medium">WhatsApp:</span>
+                  <a 
+                    href="https://wa.me/919620058644" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    +91 96200 58644
+                  </a>
+                </p>
+                <p className="break-all">
+                  <span className="font-medium">Ethereum Address:</span>
+                  <br />
+                  <code className="text-xs bg-blue-100 dark:bg-blue-900/30 px-1 py-0.5 rounded">
+                    0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7
+                  </code>
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Button
         type="submit"
         className="w-full"

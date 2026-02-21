@@ -15,6 +15,30 @@ interface TransactionFormProps {
   onSuccess?: () => void;
 }
 
+const PAYMENT_MODES = [
+  'GPay',
+  'PhonePe',
+  'Paytm',
+  'BHIM UPI',
+  'Bank Transfer',
+  'NEFT',
+  'RTGS',
+  'IMPS',
+  'Crypto',
+  'Bitcoin',
+  'Ethereum',
+  'USDT',
+  'CBDC',
+  'Digital Rupee',
+  'Wallets',
+  'PayPal',
+  'Stripe',
+  'Cash',
+  'Cheque',
+  'Demand Draft',
+  'Other'
+];
+
 export default function TransactionForm({ investmentId, onSuccess }: TransactionFormProps) {
   const [amount, setAmount] = useState('');
   const [transactionType, setTransactionType] = useState<TransactionType>(TransactionType.recharge);
@@ -155,7 +179,7 @@ export default function TransactionForm({ investmentId, onSuccess }: Transaction
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="mode">Mode <span className="text-destructive">*</span></Label>
+          <Label htmlFor="mode">Payment Mode <span className="text-destructive">*</span></Label>
           <Select
             value={mode}
             onValueChange={setMode}
@@ -164,11 +188,12 @@ export default function TransactionForm({ investmentId, onSuccess }: Transaction
             <SelectTrigger id="mode">
               <SelectValue placeholder="Select payment mode" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="GPay">GPay</SelectItem>
-              <SelectItem value="Crypto">Crypto</SelectItem>
-              <SelectItem value="CBDC">CBDC</SelectItem>
-              <SelectItem value="Wallets">Wallets</SelectItem>
+            <SelectContent className="max-h-[300px]">
+              {PAYMENT_MODES.map((paymentMode) => (
+                <SelectItem key={paymentMode} value={paymentMode}>
+                  {paymentMode}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

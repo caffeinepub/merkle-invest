@@ -25,10 +25,13 @@ export const TransactionType = IDL.Variant({
 });
 export const Investment = IDL.Record({
   'id' : IDL.Text,
+  'txnIdText' : IDL.Opt(IDL.Text),
+  'mode' : IDL.Text,
   'name' : IDL.Text,
   'eProject' : IDL.Opt(IDL.Text),
   'description' : IDL.Text,
   'created_at' : IDL.Int,
+  'txnIdNat' : IDL.Nat,
   'investor' : IDL.Principal,
 });
 export const SessionState = IDL.Record({
@@ -61,7 +64,15 @@ export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createInvestment' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        IDL.Text,
+        IDL.Nat,
+        IDL.Opt(IDL.Text),
+      ],
       [],
       [],
     ),
@@ -137,10 +148,13 @@ export const idlFactory = ({ IDL }) => {
   });
   const Investment = IDL.Record({
     'id' : IDL.Text,
+    'txnIdText' : IDL.Opt(IDL.Text),
+    'mode' : IDL.Text,
     'name' : IDL.Text,
     'eProject' : IDL.Opt(IDL.Text),
     'description' : IDL.Text,
     'created_at' : IDL.Int,
+    'txnIdNat' : IDL.Nat,
     'investor' : IDL.Principal,
   });
   const SessionState = IDL.Record({
@@ -173,7 +187,15 @@ export const idlFactory = ({ IDL }) => {
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createInvestment' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          IDL.Text,
+          IDL.Nat,
+          IDL.Opt(IDL.Text),
+        ],
         [],
         [],
       ),

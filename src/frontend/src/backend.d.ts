@@ -15,10 +15,13 @@ export interface SessionState {
 }
 export interface Investment {
     id: string;
+    txnIdText?: string;
+    mode: string;
     name: string;
     eProject?: string;
     description: string;
     created_at: bigint;
+    txnIdNat: bigint;
     investor: Principal;
 }
 export interface UserProfile {
@@ -57,7 +60,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createInvestment(id: string, name: string, description: string, eProject: string | null): Promise<void>;
+    createInvestment(id: string, name: string, description: string, eProject: string | null, mode: string, txnIdNat: bigint, txnIdText: string | null): Promise<void>;
     createTransaction(id: string, investment_id: string, amount: bigint, transaction_type: TransactionType, txn_hash: string, sessionId: string, mode: string, txnIdNat: bigint, txnIdText: string | null): Promise<void>;
     getAllInvestments(): Promise<Array<Investment>>;
     getAllSessionStates(): Promise<Array<SessionState>>;

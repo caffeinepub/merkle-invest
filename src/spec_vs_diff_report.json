@@ -1,19 +1,24 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T16:31:57.573Z",
-  "summary": "All requirements have been implemented. The diff shows complete implementation of the e-projects dropdown (admin-only), Investment.eProject field, transaction mode dropdown, dual transaction ID fields (Nat and optional Text), Transaction type updates, payment verification notice with UPI/WhatsApp/Ethereum details, confirmation dialog, and display of new fields in both transaction list components.",
+  "generatedAt": "2026-02-21T17:32:48.753Z",
+  "summary": "The implementation appears to address all six requirements from the BuildRequest. The InvestmentForm component now includes the e-project dropdown with 38 secoinfi-apps options, the Mode select with exactly four payment options, two transaction ID fields (numeric required and optional text), and a payment notice section displaying UPI, WhatsApp, and Ethereum information. The backend Investment type and createInvestment function have been updated to accept and store the new fields. However, verification of REQ-5 (ensuring form visibility to all users without admin-only restrictions) cannot be fully confirmed from the truncated diff.",
   "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.95,
+  "hallucinated_features": [
+    {
+      "description": "Migration module (backend/migration.mo) for handling schema changes from old Investment type to new Investment type with default values",
+      "reason": "The BuildRequest explicitly states in non-goals: 'Modifying the transaction form or transaction creation flow' and does not request any data migration functionality. The migration.mo file with its OldInvestment/NewInvestment types and migration logic was not requested.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    }
+  ],
+  "confidence": 0.85,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/src/components/InvestmentForm.tsx",
-    "frontend/src/components/TransactionForm.tsx",
-    "frontend/src/components/TransactionList.tsx",
-    "frontend/src/components/TransactionsList.tsx",
     "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]

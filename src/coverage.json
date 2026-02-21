@@ -1,18 +1,18 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T16:31:57.575Z",
+  "generatedAt": "2026-02-21T17:32:48.755Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 8,
-    "implemented": 6,
+    "total": 6,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a 'Default Deposits on e-Projects' dropdown field in the InvestmentForm component with the following 38 secoinfi-apps options: e-contract-lwf, e-contracts-bqe, etutorial-lgc, etutorials-cso, evolved-ai-o6e, forms-sxn, geo-map-w9s, golden-sec-vri, ia-niqaw-947, icp-cloud-storage-hvk, infi-loop-1au, infytask-mia, ipfs-lrm, key-unlock-5hx, map-56b, moap-app-6ag, multi-apps-unify-app-hbc, n8n-tasks-c2i, n8n-workflows-6sy, networth-htm, op-hotels-rests-ae0, pvt-projects-7wo, sec-build-0bj, sec-epay-am0, sec-jewelry-j03, secoin-ep6, sitemap-hub-fe2, sitemap-hub-sy0, sitemap-nya, sitemap-subs-app-j3h, sitemaps-fwh, sudeep-hotels-eu8, terror-uproot-97d, trends-63c, trends-d1l, voice-invoice-au1, xcaller-0aw, yo-data-app-o7u. This dropdown should only be accessible and visible to users with ADMIN role.",
+        "summary": "In the InvestmentForm component, add an e-project dropdown field positioned immediately after the 'Description' field. Populate this dropdown with all secoinfi-apps options that are currently defined in the backend (the 38 options from the e-project list). The dropdown should be required and visible to all users, not just admins.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/InvestmentForm.tsx"
@@ -23,74 +23,52 @@
       },
       {
         "id": "REQ-2",
-        "summary": "Store the selected e-project value in the backend Investment type by adding an eProject field of type ?Text to the Investment record in main.mo.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Add a 'Mode' select dropdown in the InvestmentForm component after the e-project dropdown. This dropdown must contain exactly four options: 'GPay', 'Crypto', 'CBDC', and 'Wallets'. The field should be required and visible to all users.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InvestmentForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InvestmentForm.tsx"
+        ]
       },
       {
         "id": "REQ-3",
-        "summary": "Add a 'Mode' dropdown field to TransactionForm with options: GPay, Crypto, CBDC, Wallets. This field should be required for all fund transactions.",
+        "summary": "Add two transaction ID input fields in the InvestmentForm component after the Mode dropdown: (1) 'Txn ID (Nat)' as a required numeric input field accepting only natural numbers, and (2) 'Txn ID (String)' as an optional text input field. Both fields should be visible to all users.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
+          "frontend/src/components/InvestmentForm.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
+          "frontend/src/components/InvestmentForm.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Add two transaction ID fields to TransactionForm: a required 'Txn ID' numeric input field (Nat type) and an optional 'Txn ID (Text)' text input field.",
+        "summary": "Add a payment notice section in the InvestmentForm component after the transaction ID fields. Display the following information: UPI ID 'secoin@uboi', WhatsApp contact link 'https://wa.me/919620058644', and Ethereum address '0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7'. Format this as an informational notice box visible to all users.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
+          "frontend/src/components/InvestmentForm.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
+          "frontend/src/components/InvestmentForm.tsx"
         ]
       },
       {
         "id": "REQ-5",
-        "summary": "Update the Transaction type in main.mo to include three new fields: mode of type Text, txnIdNat of type Nat, and txnIdText of type ?Text.",
-        "status": "unknown",
-        "plannedFiles": [],
+        "summary": "Ensure the expanded InvestmentForm with all new fields (e-project dropdown, Mode select, transaction ID fields, and payment notice) is visible and accessible to all authenticated users in the Dashboard component, not just admins. Remove any admin-only restrictions on form visibility while maintaining the form's position in the existing Dashboard layout.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/components/Dashboard.tsx"
+        ],
         "matchedFiles": []
       },
       {
         "id": "REQ-6",
-        "summary": "Display a prominent notice in TransactionForm that reads: 'After successful Deposit to Our UPI A/c: secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644. Include Crypto Deposits receipts as Txn ID after sending Ethereum on ERC20 Mainnet to Our Eth ID: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7. Pl. Recheck & Verify if Details to be Submitted is Correct.'",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Add a confirmation dialog or review step in TransactionForm that displays all entered transaction details before final submission, allowing users to verify the information is correct.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/TransactionForm.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Update TransactionList and TransactionsList components to display the new transaction fields: mode, numeric transaction ID, and text transaction ID (when present).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/TransactionList.tsx",
-          "frontend/src/components/TransactionsList.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/TransactionList.tsx",
-          "frontend/src/components/TransactionsList.tsx"
-        ]
+        "summary": "Update the backend main.mo createInvestment function to accept and store the new fields from the expanded form: e-project selection (text), mode (text), transaction ID as Nat (numeric), and optional transaction ID as string. Ensure the Investment type includes these new fields.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
@@ -104,9 +82,6 @@
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
     "frontend/src/components/InvestmentForm.tsx",
-    "frontend/src/components/TransactionForm.tsx",
-    "frontend/src/components/TransactionList.tsx",
-    "frontend/src/components/TransactionsList.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",

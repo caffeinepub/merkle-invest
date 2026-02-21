@@ -10,7 +10,6 @@ import Array "mo:core/Array";
 import Random "mo:core/Random";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import Blob "mo:core/Blob";
 import Migration "migration";
 
 (with migration = Migration.run)
@@ -19,14 +18,12 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  // User profile type - using AccessControl.UserRole for consistency
   public type UserProfile = {
     name : Text;
     email : Text;
     role : Text;
   };
 
-  // Investments
   public type Investment = {
     id : Text;
     name : Text;
@@ -34,9 +31,11 @@ actor {
     investor : Principal;
     created_at : Int;
     eProject : ?Text;
+    mode : Text;
+    txnIdNat : Nat;
+    txnIdText : ?Text;
   };
 
-  // Transaction types
   public type TransactionType = {
     #recharge;
     #invest;
@@ -79,7 +78,6 @@ actor {
   let sessionIdToNonce = Map.empty<Text, Text>();
   let latestSessionHashStates = Map.empty<Principal, SessionState>();
 
-  // Profile management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view profiles");
@@ -101,8 +99,15 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Investment management
-  public shared ({ caller }) func createInvestment(id : Text, name : Text, description : Text, eProject : ?Text) : async () {
+  public shared ({ caller }) func createInvestment(
+    id : Text,
+    name : Text,
+    description : Text,
+    eProject : ?Text,
+    mode : Text,
+    txnIdNat : Nat,
+    txnIdText : ?Text,
+  ) : async () {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can create investments");
     };
@@ -113,12 +118,14 @@ actor {
       investor = caller;
       created_at = Time.now();
       eProject;
+      mode;
+      txnIdNat;
+      txnIdText;
     };
     investments.add(id, investment);
   };
 
   public query ({ caller }) func getAllInvestments() : async [Investment] {
-    // Only admins can view all investments
     if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
       Runtime.trap("Unauthorized: Only admins can view all investments");
     };
@@ -126,11 +133,9 @@ actor {
   };
 
   public query ({ caller }) func getInvestmentList(p : Principal) : async [Investment] {
-    // Only admins can view other users' investments, users can view their own
     if (p != caller and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own investments");
     };
-
     let investmentsList = List.empty<Investment>();
     investments.entries().forEach(
       func(entry) {
@@ -149,7 +154,6 @@ actor {
     };
     switch (investments.get(id)) {
       case (?investment) {
-        // Users can only view their own investments unless they are admin
         if (investment.investor != caller and not AccessControl.isAdmin(accessControlState, caller)) {
           Runtime.trap("Unauthorized: Can only view your own investments");
         };
@@ -179,7 +183,6 @@ actor {
     };
   };
 
-  // Process session buffer for txns: add new hash and keep only last 6 (FIFO: oldest first, newest last)
   func updateSessionBuffer(investor : Principal, newHash : Text) {
     let newBuffer : [Text] = switch (sessionBuffers.get(investor)) {
       case (?existingBuffer) {
@@ -195,7 +198,6 @@ actor {
     sessionBuffers.add(investor, newBuffer);
   };
 
-  // Read-only endpoint that returns the session buffer for current investor
   public query ({ caller }) func getSessionTxnHashes() : async [Text] {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view session transaction hashes");
@@ -225,7 +227,6 @@ actor {
     sessionIdToNonce.add(id, nonce);
   };
 
-  // Transaction management
   public shared ({ caller }) func createTransaction(
     id : Text,
     investment_id : Text,
@@ -242,7 +243,6 @@ actor {
     };
     switch (investments.get(investment_id)) {
       case (null) { Runtime.trap("Investment does not exist") };
-      // Only creator of investment can create transactions for it
       case (?investment) {
         if (investment.investor != caller) {
           Runtime.trap("Unauthorized: You do not own this investment");
@@ -270,7 +270,6 @@ actor {
       txnIdText;
     };
     transactions.add(id, transaction);
-    // Update in-memory session buffer with new txn hash
     updateSessionBuffer(caller, txn_hash);
   };
 
@@ -280,7 +279,6 @@ actor {
     };
     switch (transactions.get(id)) {
       case (?transaction) {
-        // Users can only view their own transactions unless they are admin
         if (transaction.investor_id != caller and not AccessControl.isAdmin(accessControlState, caller)) {
           Runtime.trap("Unauthorized: Can only view your own transactions");
         };
@@ -290,12 +288,10 @@ actor {
     };
   };
 
-  // Get all transaction for a specific investment
   public query ({ caller }) func getInvestmentTransactions(investment_id : Text) : async [Transaction] {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view transactions");
     };
-    // Check that caller owns the investment or is admin
     switch (investments.get(investment_id)) {
       case (?investment) {
         if (investment.investor != caller and not AccessControl.isAdmin(accessControlState, caller)) {
@@ -309,7 +305,6 @@ actor {
     );
   };
 
-  // Get all transactions for the calling investor
   public query ({ caller }) func getCallerTransactions() : async [Transaction] {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view transactions");
@@ -319,7 +314,6 @@ actor {
     );
   };
 
-  // Get transactions for specific investor (admin only)
   public query ({ caller }) func getInvestorTransactions(investor_id : Principal) : async [Transaction] {
     if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
       Runtime.trap("Unauthorized: Only admins can view all transactions");
@@ -336,7 +330,6 @@ actor {
 
     switch (sessionStates.get(session_id)) {
       case (?sessionState) {
-        // Users can only view their own session states unless they are admin
         if (sessionState.user_id != caller and not AccessControl.isAdmin(accessControlState, caller)) {
           Runtime.trap("Unauthorized: Can only view your own session states");
         };

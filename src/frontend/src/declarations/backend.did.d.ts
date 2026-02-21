@@ -12,10 +12,13 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface Investment {
   'id' : string,
+  'txnIdText' : [] | [string],
+  'mode' : string,
   'name' : string,
   'eProject' : [] | [string],
   'description' : string,
   'created_at' : bigint,
+  'txnIdNat' : bigint,
   'investor' : Principal,
 }
 export interface SessionState {
@@ -58,7 +61,7 @@ export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createInvestment' : ActorMethod<
-    [string, string, string, [] | [string]],
+    [string, string, string, [] | [string], string, bigint, [] | [string]],
     undefined
   >,
   'createTransaction' : ActorMethod<
