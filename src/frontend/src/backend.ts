@@ -89,6 +89,12 @@ export class ExternalBlob {
         return this;
     }
 }
+export interface SessionState {
+    session_id: string;
+    user_id: Principal;
+    timestamp: bigint;
+    finalRootHash: string;
+}
 export interface Investment {
     id: string;
     name: string;
@@ -131,8 +137,9 @@ export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createInvestment(id: string, name: string, description: string): Promise<void>;
-    createTransaction(id: string, investment_id: string, amount: bigint, transaction_type: TransactionType, txn_hash: string): Promise<void>;
+    createTransaction(id: string, investment_id: string, amount: bigint, transaction_type: TransactionType, txn_hash: string, sessionId: string): Promise<void>;
     getAllInvestments(): Promise<Array<Investment>>;
+    getAllSessionStates(): Promise<Array<SessionState>>;
     getCallerTransactions(): Promise<Array<Transaction>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -140,13 +147,18 @@ export interface backendInterface {
     getInvestmentList(p: Principal): Promise<Array<Investment>>;
     getInvestmentTransactions(investment_id: string): Promise<Array<Transaction>>;
     getInvestorTransactions(investor_id: Principal): Promise<Array<Transaction>>;
+    getLatestSessionHashes(): Promise<SessionState | null>;
+    getSessionIdReturn(arg0: null): Promise<string | null>;
+    getSessionState(session_id: string): Promise<SessionState | null>;
     getSessionTxnHashes(): Promise<Array<string>>;
     getTransaction(id: string): Promise<Transaction | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    setSessionIdReturn(id: string, nonce: string): Promise<void>;
+    updateLatestSessionHashes(sessionState: SessionState): Promise<void>;
 }
-import type { Investment as _Investment, Transaction as _Transaction, TransactionType as _TransactionType, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Investment as _Investment, SessionState as _SessionState, Transaction as _Transaction, TransactionType as _TransactionType, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -191,17 +203,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createTransaction(arg0: string, arg1: string, arg2: bigint, arg3: TransactionType, arg4: string): Promise<void> {
+    async createTransaction(arg0: string, arg1: string, arg2: bigint, arg3: TransactionType, arg4: string, arg5: string): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.createTransaction(arg0, arg1, arg2, to_candid_TransactionType_n3(this._uploadFile, this._downloadFile, arg3), arg4);
+                const result = await this.actor.createTransaction(arg0, arg1, arg2, to_candid_TransactionType_n3(this._uploadFile, this._downloadFile, arg3), arg4, arg5);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createTransaction(arg0, arg1, arg2, to_candid_TransactionType_n3(this._uploadFile, this._downloadFile, arg3), arg4);
+            const result = await this.actor.createTransaction(arg0, arg1, arg2, to_candid_TransactionType_n3(this._uploadFile, this._downloadFile, arg3), arg4, arg5);
             return result;
         }
     }
@@ -216,6 +228,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.getAllInvestments();
+            return result;
+        }
+    }
+    async getAllSessionStates(): Promise<Array<SessionState>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllSessionStates();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllSessionStates();
             return result;
         }
     }
@@ -317,6 +343,48 @@ export class Backend implements backendInterface {
             return from_candid_vec_n5(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getLatestSessionHashes(): Promise<SessionState | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getLatestSessionHashes();
+                return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getLatestSessionHashes();
+            return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getSessionIdReturn(arg0: null): Promise<string | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSessionIdReturn(arg0);
+                return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSessionIdReturn(arg0);
+            return from_candid_opt_n15(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getSessionState(arg0: string): Promise<SessionState | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getSessionState(arg0);
+                return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getSessionState(arg0);
+            return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getSessionTxnHashes(): Promise<Array<string>> {
         if (this.processError) {
             try {
@@ -335,14 +403,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getTransaction(arg0);
-                return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n16(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTransaction(arg0);
-            return from_candid_opt_n14(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n16(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
@@ -387,6 +455,34 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async setSessionIdReturn(arg0: string, arg1: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.setSessionIdReturn(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.setSessionIdReturn(arg0, arg1);
+            return result;
+        }
+    }
+    async updateLatestSessionHashes(arg0: SessionState): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateLatestSessionHashes(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateLatestSessionHashes(arg0);
+            return result;
+        }
+    }
 }
 function from_candid_TransactionType_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _TransactionType): TransactionType {
     return from_candid_variant_n9(_uploadFile, _downloadFile, value);
@@ -403,7 +499,13 @@ function from_candid_opt_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function from_candid_opt_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Investment]): Investment | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Transaction]): Transaction | null {
+function from_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SessionState]): SessionState | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Transaction]): Transaction | null {
     return value.length === 0 ? null : from_candid_Transaction_n6(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_record_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {

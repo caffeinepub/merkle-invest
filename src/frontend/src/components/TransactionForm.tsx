@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useCreateTransaction } from '../hooks/useQueries';
-import { TransactionType } from '../backend';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState, useEffect } from 'react';
+import { useCreateTransaction, useSetSessionIdReturn } from '../hooks/useQueries';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Button } from './ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { toast } from 'sonner';
+import { TransactionType } from '../backend';
 
 interface TransactionFormProps {
   investmentId: string;
@@ -14,50 +14,71 @@ interface TransactionFormProps {
 
 export default function TransactionForm({ investmentId, onSuccess }: TransactionFormProps) {
   const [amount, setAmount] = useState('');
-  const [transactionType, setTransactionType] = useState<TransactionType>(TransactionType.invest);
+  const [transactionType, setTransactionType] = useState<TransactionType>(TransactionType.recharge);
+  const [sessionId, setSessionId] = useState<string>('');
   const createTransaction = useCreateTransaction();
+  const setSessionIdReturn = useSetSessionIdReturn();
+
+  useEffect(() => {
+    const initSession = async () => {
+      const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const nonce = `nonce_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      setSessionId(newSessionId);
+      
+      try {
+        await setSessionIdReturn.mutateAsync({ id: newSessionId, nonce });
+      } catch (error) {
+        console.error('Failed to initialize session:', error);
+      }
+    };
+    
+    initSession();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const amountNum = parseFloat(amount);
-    if (isNaN(amountNum) || amountNum <= 0) {
-      toast.error('Please enter a valid positive amount');
+    if (!amount || parseFloat(amount) <= 0) {
+      toast.error('Please enter a valid amount');
+      return;
+    }
+
+    if (!sessionId) {
+      toast.error('Session not initialized');
       return;
     }
 
     try {
-      const id = `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      // Backend will generate nonce, session_seq, and should compute txn_hash
-      // For now, we pass a placeholder hash until backend implements SHA-256
-      const txnHash = 'PENDING_HASH';
-      
+      const txnHash = `hash_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const id = `txn_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
       await createTransaction.mutateAsync({
         id,
-        investmentId,
-        amount: BigInt(Math.floor(amountNum)),
-        transactionType,
-        txnHash,
+        investment_id: investmentId,
+        amount: BigInt(Math.floor(parseFloat(amount) * 100)),
+        transaction_type: transactionType,
+        txn_hash: txnHash,
+        sessionId,
       });
-      toast.success('Transaction created successfully!');
+
+      toast.success('Transaction created successfully');
       setAmount('');
       onSuccess?.();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Transaction creation error:', error);
-      toast.error('Failed to create transaction. Please try again.');
+      toast.error('Failed to create transaction: ' + (error.message || 'Unknown error'));
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="transaction-type">Transaction Type</Label>
-        <Select 
-          value={transactionType} 
+        <Label htmlFor="type">Transaction Type</Label>
+        <Select
+          value={transactionType}
           onValueChange={(value) => setTransactionType(value as TransactionType)}
-          disabled={createTransaction.isPending}
         >
-          <SelectTrigger id="transaction-type">
+          <SelectTrigger id="type">
             <SelectValue placeholder="Select transaction type" />
           </SelectTrigger>
           <SelectContent>
@@ -72,24 +93,21 @@ export default function TransactionForm({ investmentId, onSuccess }: Transaction
           </SelectContent>
         </Select>
       </div>
+
       <div className="space-y-2">
-        <Label htmlFor="transaction-amount">Amount ($)</Label>
+        <Label htmlFor="amount">Amount</Label>
         <Input
-          id="transaction-amount"
+          id="amount"
           type="number"
-          placeholder="e.g., 5000"
+          step="0.01"
+          placeholder="Enter amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          disabled={createTransaction.isPending}
-          min="0"
-          step="0.01"
+          required
         />
       </div>
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={createTransaction.isPending}
-      >
+
+      <Button type="submit" className="w-full" disabled={createTransaction.isPending || !sessionId}>
         {createTransaction.isPending ? 'Creating...' : 'Create Transaction'}
       </Button>
     </form>

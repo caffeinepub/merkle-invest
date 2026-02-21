@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { UserProfile, Investment, Transaction, TransactionType } from '../backend';
+import type { UserProfile, Investment, Transaction, SessionState } from '../backend';
+import { Principal } from '@dfinity/principal';
 
-// User Profile Queries
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
 
@@ -38,17 +38,29 @@ export function useSaveCallerUserProfile() {
   });
 }
 
-// Investment Queries
 export function useGetAllInvestments() {
   const { actor, isFetching } = useActor();
 
   return useQuery<Investment[]>({
-    queryKey: ['allInvestments'],
+    queryKey: ['investments'],
     queryFn: async () => {
       if (!actor) return [];
       return actor.getAllInvestments();
     },
     enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetInvestmentList(principal: Principal | null) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Investment[]>({
+    queryKey: ['investmentList', principal?.toString()],
+    queryFn: async () => {
+      if (!actor || !principal) return [];
+      return actor.getInvestmentList(principal);
+    },
+    enabled: !!actor && !isFetching && !!principal,
   });
 }
 
@@ -62,19 +74,19 @@ export function useCreateInvestment() {
       return actor.createInvestment(id, name, description);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['allInvestments'] });
+      queryClient.invalidateQueries({ queryKey: ['investments'] });
+      queryClient.invalidateQueries({ queryKey: ['investmentList'] });
     },
   });
 }
 
-// Transaction Queries
-export function useGetInvestmentTransactions(investmentId: string) {
+export function useGetInvestmentTransactions(investmentId: string | null) {
   const { actor, isFetching } = useActor();
 
   return useQuery<Transaction[]>({
-    queryKey: ['transactions', investmentId],
+    queryKey: ['investmentTransactions', investmentId],
     queryFn: async () => {
-      if (!actor) return [];
+      if (!actor || !investmentId) return [];
       return actor.getInvestmentTransactions(investmentId);
     },
     enabled: !!actor && !isFetching && !!investmentId,
@@ -94,6 +106,37 @@ export function useGetCallerTransactions() {
   });
 }
 
+export function useCreateTransaction() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      investment_id,
+      amount,
+      transaction_type,
+      txn_hash,
+      sessionId,
+    }: {
+      id: string;
+      investment_id: string;
+      amount: bigint;
+      transaction_type: any;
+      txn_hash: string;
+      sessionId: string;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.createTransaction(id, investment_id, amount, transaction_type, txn_hash, sessionId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['investmentTransactions'] });
+      queryClient.invalidateQueries({ queryKey: ['callerTransactions'] });
+      queryClient.invalidateQueries({ queryKey: ['sessionTxnHashes'] });
+    },
+  });
+}
+
 export function useGetSessionTxnHashes() {
   const { actor, isFetching } = useActor();
 
@@ -107,34 +150,58 @@ export function useGetSessionTxnHashes() {
   });
 }
 
-export function useCreateTransaction() {
+export function useGetLatestSessionHashes() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SessionState | null>({
+    queryKey: ['latestSessionHashes'],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getLatestSessionHashes();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useUpdateLatestSessionHashes() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      id, 
-      investmentId, 
-      amount, 
-      transactionType, 
-      txnHash,
-    }: { 
-      id: string; 
-      investmentId: string; 
-      amount: bigint;
-      transactionType: TransactionType;
-      txnHash: string;
-    }) => {
+    mutationFn: async (sessionState: SessionState) => {
       if (!actor) throw new Error('Actor not available');
-      // Backend automatically generates nonce and session_seq
-      // txnHash should be computed by backend but currently needs to be passed
-      return actor.createTransaction(id, investmentId, amount, transactionType, txnHash);
+      return actor.updateLatestSessionHashes(sessionState);
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['transactions', variables.investmentId] });
-      queryClient.invalidateQueries({ queryKey: ['callerTransactions'] });
-      queryClient.invalidateQueries({ queryKey: ['allInvestments'] });
-      queryClient.invalidateQueries({ queryKey: ['sessionTxnHashes'] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['latestSessionHashes'] });
+    },
+  });
+}
+
+export function useGetSessionIdReturn() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<string | null>({
+    queryKey: ['sessionIdReturn'],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getSessionIdReturn(null);
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useSetSessionIdReturn() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, nonce }: { id: string; nonce: string }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.setSessionIdReturn(id, nonce);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sessionIdReturn'] });
     },
   });
 }

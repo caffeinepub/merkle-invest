@@ -30,6 +30,12 @@ export const Investment = IDL.Record({
   'created_at' : IDL.Int,
   'investor' : IDL.Principal,
 });
+export const SessionState = IDL.Record({
+  'session_id' : IDL.Text,
+  'user_id' : IDL.Principal,
+  'timestamp' : IDL.Int,
+  'finalRootHash' : IDL.Text,
+});
 export const Transaction = IDL.Record({
   'id' : IDL.Text,
   'transaction_type' : TransactionType,
@@ -52,11 +58,12 @@ export const idlService = IDL.Service({
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createInvestment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
   'createTransaction' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Nat, TransactionType, IDL.Text],
+      [IDL.Text, IDL.Text, IDL.Nat, TransactionType, IDL.Text, IDL.Text],
       [],
       [],
     ),
   'getAllInvestments' : IDL.Func([], [IDL.Vec(Investment)], ['query']),
+  'getAllSessionStates' : IDL.Func([], [IDL.Vec(SessionState)], ['query']),
   'getCallerTransactions' : IDL.Func([], [IDL.Vec(Transaction)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -76,6 +83,9 @@ export const idlService = IDL.Service({
       [IDL.Vec(Transaction)],
       ['query'],
     ),
+  'getLatestSessionHashes' : IDL.Func([], [IDL.Opt(SessionState)], ['query']),
+  'getSessionIdReturn' : IDL.Func([IDL.Null], [IDL.Opt(IDL.Text)], ['query']),
+  'getSessionState' : IDL.Func([IDL.Text], [IDL.Opt(SessionState)], ['query']),
   'getSessionTxnHashes' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
   'getTransaction' : IDL.Func([IDL.Text], [IDL.Opt(Transaction)], ['query']),
   'getUserProfile' : IDL.Func(
@@ -85,6 +95,8 @@ export const idlService = IDL.Service({
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'setSessionIdReturn' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'updateLatestSessionHashes' : IDL.Func([SessionState], [], []),
 });
 
 export const idlInitArgs = [];
@@ -112,6 +124,12 @@ export const idlFactory = ({ IDL }) => {
     'created_at' : IDL.Int,
     'investor' : IDL.Principal,
   });
+  const SessionState = IDL.Record({
+    'session_id' : IDL.Text,
+    'user_id' : IDL.Principal,
+    'timestamp' : IDL.Int,
+    'finalRootHash' : IDL.Text,
+  });
   const Transaction = IDL.Record({
     'id' : IDL.Text,
     'transaction_type' : TransactionType,
@@ -134,11 +152,12 @@ export const idlFactory = ({ IDL }) => {
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createInvestment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
     'createTransaction' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Nat, TransactionType, IDL.Text],
+        [IDL.Text, IDL.Text, IDL.Nat, TransactionType, IDL.Text, IDL.Text],
         [],
         [],
       ),
     'getAllInvestments' : IDL.Func([], [IDL.Vec(Investment)], ['query']),
+    'getAllSessionStates' : IDL.Func([], [IDL.Vec(SessionState)], ['query']),
     'getCallerTransactions' : IDL.Func([], [IDL.Vec(Transaction)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -158,6 +177,13 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(Transaction)],
         ['query'],
       ),
+    'getLatestSessionHashes' : IDL.Func([], [IDL.Opt(SessionState)], ['query']),
+    'getSessionIdReturn' : IDL.Func([IDL.Null], [IDL.Opt(IDL.Text)], ['query']),
+    'getSessionState' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(SessionState)],
+        ['query'],
+      ),
     'getSessionTxnHashes' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     'getTransaction' : IDL.Func([IDL.Text], [IDL.Opt(Transaction)], ['query']),
     'getUserProfile' : IDL.Func(
@@ -167,6 +193,8 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'setSessionIdReturn' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'updateLatestSessionHashes' : IDL.Func([SessionState], [], []),
   });
 };
 

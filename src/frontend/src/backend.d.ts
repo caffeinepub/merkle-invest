@@ -7,6 +7,12 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export interface SessionState {
+    session_id: string;
+    user_id: Principal;
+    timestamp: bigint;
+    finalRootHash: string;
+}
 export interface Investment {
     id: string;
     name: string;
@@ -48,8 +54,9 @@ export enum UserRole {
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createInvestment(id: string, name: string, description: string): Promise<void>;
-    createTransaction(id: string, investment_id: string, amount: bigint, transaction_type: TransactionType, txn_hash: string): Promise<void>;
+    createTransaction(id: string, investment_id: string, amount: bigint, transaction_type: TransactionType, txn_hash: string, sessionId: string): Promise<void>;
     getAllInvestments(): Promise<Array<Investment>>;
+    getAllSessionStates(): Promise<Array<SessionState>>;
     getCallerTransactions(): Promise<Array<Transaction>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -57,9 +64,14 @@ export interface backendInterface {
     getInvestmentList(p: Principal): Promise<Array<Investment>>;
     getInvestmentTransactions(investment_id: string): Promise<Array<Transaction>>;
     getInvestorTransactions(investor_id: Principal): Promise<Array<Transaction>>;
+    getLatestSessionHashes(): Promise<SessionState | null>;
+    getSessionIdReturn(arg0: null): Promise<string | null>;
+    getSessionState(session_id: string): Promise<SessionState | null>;
     getSessionTxnHashes(): Promise<Array<string>>;
     getTransaction(id: string): Promise<Transaction | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    setSessionIdReturn(id: string, nonce: string): Promise<void>;
+    updateLatestSessionHashes(sessionState: SessionState): Promise<void>;
 }

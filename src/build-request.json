@@ -1,96 +1,96 @@
 {
   "kind": "build_request",
-  "title": "Add per-investor session buffer for last 6 transaction hashes with read-only endpoint",
-  "projectName": "Crowd-AI-Fund",
-  "priority": "normal",
+  "title": "Debug and fix non-functional frontend",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add an in-memory session buffer for each logged-in INVESTOR that stores exactly the last 6 txn_hash values for that investor's current session, scoped per user session and not global",
-      "target": "backend",
+      "text": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-latest"
         ],
         "quotes": [
-          "Add an in-memory session buffer for each logged-in INVESTOR that stores exactly the last 6 txn_hash values for that investor's current session",
-          "Scope this buffer per user session, not global"
+          "But still app is not working, recheck its frontend"
         ]
       },
       "acceptanceCriteria": [
-        "Each investor has their own session-scoped buffer",
-        "Buffer stores exactly up to 6 txn_hash values",
-        "Buffer is isolated per user session, not shared globally"
+        "Application loads without console errors",
+        "No React rendering errors or hooks violations",
+        "All components mount successfully"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "When a new Transaction is created, append its txn_hash into the investor's session buffer, implementing FIFO ring buffer behavior where if the buffer already has 6 hashes, remove the oldest and then add the new one",
-      "target": "backend",
+      "text": "Verify Internet Identity authentication flow works correctly and user can log in",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "When a new Transaction is created, append its txn_hash into this buffer",
-          "If the buffer already has 6 hashes, remove the oldest and then add the new one (FIFO ring buffer)"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "New transaction hashes are appended to the buffer automatically",
-        "When buffer reaches 6 items, oldest hash is removed before adding new one",
-        "FIFO ordering is maintained (oldest to newest)"
+        "Login button triggers Internet Identity authentication",
+        "User identity is properly stored and persisted",
+        "Authenticated state updates UI correctly"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add a read-only backend endpoint that returns the current list of up to 6 transaction hashes for the logged-in investor, ordered from oldest to newest",
-      "target": "backend",
+      "text": "Ensure the actor initialization and backend communication is working properly",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Add a read-only endpoint or API that returns the current list of up to 6 hashes for the logged-in investor, in order from oldest to newest"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Endpoint returns array of txn_hash values for the caller's session",
-        "Hashes are ordered from oldest to newest",
-        "Endpoint is read-only and does not modify state",
-        "Returns up to 6 hashes (may be fewer if session has fewer transactions)"
+        "Actor is initialized with correct canister ID",
+        "Backend calls complete without errors",
+        "Query hooks properly fetch and cache data"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Display the code or logic added for the session buffer and read-only endpoint in the implementation",
-      "target": "backend",
+      "text": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "Show me the code or logic you added for the buffer and this read-only endpoint"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Buffer implementation code is visible in backend/main.mo",
-        "Read-only endpoint implementation code is visible in backend/main.mo",
-        "FIFO ring buffer logic is clearly implemented"
+        "Session buffer displays up to 6 transaction hashes",
+        "Last SessionState record shows previousStateHash, sessionBufferHash, and timestamp",
+        "Section is visible only to INVESTOR role users"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All imports resolve correctly",
+        "No missing npm packages",
+        "Vite build configuration is valid"
       ]
     }
   ],
   "constraints": [
-    "Keep all existing models and logic exactly as they are",
-    "Buffer must store exactly 6 txn_hash values maximum",
-    "Buffer must be scoped per investor session, not global",
-    "FIFO ring buffer behavior must be implemented correctly"
+    "Do not modify backend logic or data models",
+    "Preserve existing authentication flow with Internet Identity",
+    "Maintain the current component structure and routing setup"
   ],
   "nonGoals": [
-    "Modifying existing transaction creation logic beyond adding buffer append",
-    "Changing existing data models or schema",
-    "Persisting the buffer across canister upgrades",
-    "Adding frontend UI for displaying the buffer"
+    "Adding new features or functionality",
+    "Changing the UI design or styling",
+    "Modifying backend endpoints or actor methods"
   ],
   "imageRequirements": {
     "required": [],

@@ -3,56 +3,54 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
-  "existing_features": [],
-  "new_feature_requests": [
+  "known_issues": [
+    "Frontend not working - requires investigation"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
     {
-      "id": "AR-1",
-      "summary": "Add in-memory session buffer storing last 6 txn_hash values per investor with FIFO ring buffer logic",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Add read-only endpoint/API returning current list of up to 6 hashes for logged-in investor (oldest to newest)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Add an in-memory session buffer for each logged-in INVESTOR that stores exactly the last 6 txn_hash values for that investor's current session, scoped per user session and not global",
+      "id": "feature-investigate-and-fix-all-frontend-runtime-errors-preventing-the-application-from-loading-or-functioning-correctly",
+      "title": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
       "reqIds": [
         "REQ-1"
       ],
-      "status": "pending"
+      "version": 1
     },
     {
-      "id": "AR-4",
-      "summary": "When a new Transaction is created, append its txn_hash into the investor's session buffer, implementing FIFO ring buffer behavior where if the buffer already has 6 hashes, remove the oldest and then add the new one",
+      "id": "feature-verify-internet-identity-authentication-flow-works-correctly-and-user-can-log-in",
+      "title": "Verify Internet Identity authentication flow works correctly and user can log in",
       "reqIds": [
         "REQ-2"
       ],
-      "status": "pending"
+      "version": 1
     },
     {
-      "id": "AR-5",
-      "summary": "Add a read-only backend endpoint that returns the current list of up to 6 transaction hashes for the logged-in investor, ordered from oldest to newest",
+      "id": "feature-ensure-the-actor-initialization-and-backend-communication-is-working-properly",
+      "title": "Ensure the actor initialization and backend communication is working properly",
       "reqIds": [
         "REQ-3"
       ],
-      "status": "pending"
+      "version": 1
     },
     {
-      "id": "AR-6",
-      "summary": "Display the code or logic added for the session buffer and read-only endpoint in the implementation",
+      "id": "feature-verify-the-integrity-session-state-section-renders-correctly-for-investor-users-with-session-buffer-hashes-and-sessionstate-record",
+      "title": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
       "reqIds": [
         "REQ-4"
       ],
-      "status": "pending"
+      "version": 1
+    },
+    {
+      "id": "feature-check-for-any-missing-dependencies-import-errors-or-build-configuration-issues-that-prevent-the-frontend-from-running",
+      "title": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
     }
   ],
-  "projectName": "Crowd-AI-Fund",
+  "new_feature_requests": [],
+  "projectName": "Debug and fix non-functional frontend",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -7,13 +7,10 @@ import Time "mo:core/Time";
 import Nat "mo:core/Nat";
 import Iter "mo:core/Iter";
 import Array "mo:core/Array";
-
 import Random "mo:core/Random";
-
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-
-// specify the data migration function in with-clause
+import Blob "mo:core/Blob";
 
 actor {
   // Initialize the user system state and include authorization mixin
@@ -26,8 +23,6 @@ actor {
     email : Text;
     role : Text;
   };
-
-  let userProfiles = Map.empty<Principal, UserProfile>();
 
   // Investments
   public type Investment = {
@@ -62,12 +57,21 @@ actor {
     session_seq : Nat;
   };
 
+  public type SessionState = {
+    user_id : Principal;
+    session_id : Text;
+    finalRootHash : Text;
+    timestamp : Int;
+  };
+
+  let userProfiles = Map.empty<Principal, UserProfile>();
   let investments = Map.empty<Text, Investment>();
   let transactions = Map.empty<Text, Transaction>();
   let investorSessionCounts = Map.empty<Principal, Nat>();
-
-  // New session buffer using dynamic arrays for last 6 hashes
   let sessionBuffers = Map.empty<Principal, [Text]>();
+  let sessionStates = Map.empty<Text, SessionState>();
+  let sessionIdToNonce = Map.empty<Text, Text>();
+  let latestSessionHashStates = Map.empty<Principal, SessionState>();
 
   // Profile management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -96,7 +100,6 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can create investments");
     };
-
     let investment : Investment = {
       id;
       name;
@@ -104,7 +107,6 @@ actor {
       investor = caller;
       created_at = Time.now();
     };
-
     investments.add(id, investment);
   };
 
@@ -138,7 +140,6 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view investments");
     };
-
     switch (investments.get(id)) {
       case (?investment) {
         // Users can only view their own investments unless they are admin
@@ -192,11 +193,29 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view session transaction hashes");
     };
-
     switch (sessionBuffers.get(caller)) {
       case (?buffer) { buffer };
       case (null) { [] };
     };
+  };
+
+  public query ({ caller }) func getSessionIdReturn(_ : ()) : async ?Text {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can create and get session Id");
+    };
+
+    let nonce = switch (sessionIdToNonce.get("test")) {
+      case (?n) { n };
+      case (null) { "" };
+    };
+    ?nonce;
+  };
+
+  public shared ({ caller }) func setSessionIdReturn(id : Text, nonce : Text) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can create and get session Id");
+    };
+    sessionIdToNonce.add(id, nonce);
   };
 
   // Transaction management
@@ -206,11 +225,11 @@ actor {
     amount : Nat,
     transaction_type : TransactionType,
     txn_hash : Text,
+    sessionId : Text,
   ) : async () {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can create transactions");
     };
-
     switch (investments.get(investment_id)) {
       case (null) { Runtime.trap("Investment does not exist") };
       // Only creator of investment can create transactions for it
@@ -220,11 +239,12 @@ actor {
         };
       };
     };
-
     let timestamp = Time.now();
-    let nonce = await generateNonce(timestamp);
-    let session_seq = updateSessionCount(caller);
-
+    var storedNonce = switch (sessionIdToNonce.get(sessionId)) {
+      case (?nonce) { nonce };
+      case (null) { "" };
+    };
+    var session_seq = updateSessionCount(caller);
     let transaction : Transaction = {
       id;
       investor_id = caller;
@@ -233,12 +253,10 @@ actor {
       transaction_type;
       timestamp;
       txn_hash;
-      nonce;
+      nonce = storedNonce;
       session_seq;
     };
-
     transactions.add(id, transaction);
-
     // Update in-memory session buffer with new txn hash
     updateSessionBuffer(caller, txn_hash);
   };
@@ -247,7 +265,6 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view transactions");
     };
-
     switch (transactions.get(id)) {
       case (?transaction) {
         // Users can only view their own transactions unless they are admin
@@ -265,7 +282,6 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view transactions");
     };
-
     // Check that caller owns the investment or is admin
     switch (investments.get(investment_id)) {
       case (?investment) {
@@ -275,7 +291,6 @@ actor {
       };
       case (null) { Runtime.trap("Investment does not exist") };
     };
-
     transactions.values().toArray().filter(
       func(transaction : Transaction) : Bool { transaction.investment_id == investment_id }
     );
@@ -286,7 +301,6 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can view transactions");
     };
-
     transactions.values().toArray().filter(
       func(transaction : Transaction) : Bool { transaction.investor_id == caller }
     );
@@ -297,9 +311,46 @@ actor {
     if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
       Runtime.trap("Unauthorized: Only admins can view all transactions");
     };
-
     transactions.values().toArray().filter(
       func(transaction : Transaction) : Bool { transaction.investor_id == investor_id }
     );
+  };
+
+  public query ({ caller }) func getSessionState(session_id : Text) : async ?SessionState {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can view session state");
+    };
+
+    switch (sessionStates.get(session_id)) {
+      case (?sessionState) {
+        // Users can only view their own session states unless they are admin
+        if (sessionState.user_id != caller and not AccessControl.isAdmin(accessControlState, caller)) {
+          Runtime.trap("Unauthorized: Can only view your own session states");
+        };
+        ?sessionState;
+      };
+      case (null) { null };
+    };
+  };
+
+  public query ({ caller }) func getLatestSessionHashes() : async ?SessionState {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can view session hashes");
+    };
+    latestSessionHashStates.get(caller);
+  };
+
+  public shared ({ caller }) func updateLatestSessionHashes(sessionState : SessionState) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can update session hashes");
+    };
+    latestSessionHashStates.add(caller, sessionState);
+  };
+
+  public query ({ caller }) func getAllSessionStates() : async [SessionState] {
+    if (not AccessControl.hasPermission(accessControlState, caller, #admin)) {
+      Runtime.trap("Unauthorized: Only admins can view all session states");
+    };
+    sessionStates.values().toArray();
   };
 };

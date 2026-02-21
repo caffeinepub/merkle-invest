@@ -1,6 +1,147 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add per-investor session buffer for last 6 transaction hashes with read-only endpoint",
-  "requirements": []
+  "title": "Debug and Fix Non-Functional Frontend",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "acceptanceCriteria": [
+        "Application loads without console errors",
+        "No React rendering errors or hooks violations",
+        "All components mount successfully"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Fix any React hooks violations, conditional rendering logic, and ensure proper error boundaries are in place. Verify router setup and authentication flow logic for proper sequencing."
+        },
+        {
+          "path": "frontend/src/components/Dashboard.tsx",
+          "operation": "modify",
+          "description": "Fix any runtime errors in the Dashboard component, ensure hooks are called unconditionally, and verify the Integrity & Session State section logic for INVESTOR role users."
+        },
+        {
+          "path": "frontend/src/components/InvestmentCard.tsx",
+          "operation": "modify",
+          "description": "Fix any errors in tab rendering, transaction display logic, and dialog interactions. Ensure all hooks follow React rules."
+        },
+        {
+          "path": "frontend/src/components/TransactionForm.tsx",
+          "operation": "modify",
+          "description": "Fix session management initialization logic, ensure proper async handling, and resolve any state update issues causing rendering errors."
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Verify React 18 concurrent rendering setup, ensure proper provider nesting order, and fix any initialization errors with QueryClient or InternetIdentity providers."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Verify Internet Identity authentication flow works correctly and user can log in",
+      "acceptanceCriteria": [
+        "Login button triggers Internet Identity authentication",
+        "User identity is properly stored and persisted",
+        "Authenticated state updates UI correctly"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "operation": "modify",
+          "description": "Fix authentication flow issues, verify AuthClient initialization, ensure proper identity persistence in sessionStorage, and handle authentication state transitions correctly. Use the authorization component's guidance to ensure proper login/logout behavior."
+        },
+        {
+          "path": "frontend/src/components/LoginButton.tsx",
+          "operation": "modify",
+          "description": "Fix login/logout handler logic, ensure proper error handling for authentication failures, verify query cache clearing on logout, and ensure session finalization works correctly for investors."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify authentication state checks are working correctly, ensure proper conditional rendering based on authentication status, and fix any issues with the profile setup flow for new users."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Ensure the actor initialization and backend communication is working properly",
+      "acceptanceCriteria": [
+        "Actor is initialized with correct canister ID",
+        "Backend calls complete without errors",
+        "Query hooks properly fetch and cache data"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Fix actor initialization logic, verify canister ID retrieval from environment variables or URL parameters, ensure proper actor creation with authenticated or anonymous identity, and fix access control initialization. Verify the component's usage instructions for proper actor setup."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Fix React Query hooks to properly depend on actor availability, ensure proper error handling for backend calls, verify enabled flags prevent premature execution, and fix any issues with query invalidation or caching."
+        },
+        {
+          "path": "frontend/src/components/ProfileSetup.tsx",
+          "operation": "modify",
+          "description": "Fix profile setup mutation calls, ensure proper error handling, verify the profile data structure matches backend expectations (name, email, role), and ensure proper navigation after successful profile creation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "acceptanceCriteria": [
+        "Session buffer displays up to 6 transaction hashes",
+        "Last SessionState record shows previousStateHash, sessionBufferHash, and timestamp",
+        "Section is visible only to INVESTOR role users"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Dashboard.tsx",
+          "operation": "modify",
+          "description": "Fix the Integrity & Session State section rendering logic, ensure proper role-based conditional display (only for INVESTOR users), verify session buffer hash fetching and display (up to 6 hashes), and fix SessionState record display with proper field mapping (previousStateHash, sessionBufferHash, timestamp)."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Verify the session-related query hooks (useGetSessionTxnHashes, useGetLatestSessionHashes) are properly implemented, ensure correct backend method calls, and fix any issues with data transformation or caching."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "acceptanceCriteria": [
+        "All imports resolve correctly",
+        "No missing npm packages",
+        "Vite build configuration is valid"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/package.json",
+          "operation": "modify",
+          "description": "Verify all required dependencies are present and at compatible versions, including React 18, TanStack Router, TanStack Query, @dfinity packages, Internet Identity packages, and shadcn/ui dependencies. Add any missing packages."
+        },
+        {
+          "path": "frontend/vite.config.ts",
+          "operation": "modify",
+          "description": "Fix Vite configuration to ensure proper module resolution, environment variable handling, and plugin setup. Verify polyfills for Node.js globals if needed for @dfinity packages."
+        },
+        {
+          "path": "frontend/tsconfig.json",
+          "operation": "modify",
+          "description": "Verify TypeScript configuration is correct for React 18, ensure proper module resolution strategy, verify lib includes necessary DOM and ES features, and fix any path mapping issues."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Fix any import path errors, ensure all component imports resolve correctly, verify router configuration imports are valid, and fix any type import issues."
+        }
+      ]
+    }
+  ]
 }

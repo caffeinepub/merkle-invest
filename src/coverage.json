@@ -1,56 +1,99 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T14:27:06.752Z",
+  "generatedAt": "2026-02-21T15:13:29.084Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 0,
+    "total": 5,
+    "implemented": 5,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add an in-memory session buffer for each logged-in INVESTOR that stores exactly the last 6 txn_hash values for that investor's current session, scoped per user session and not global",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/Dashboard.tsx",
+          "frontend/src/components/InvestmentCard.tsx",
+          "frontend/src/components/TransactionForm.tsx",
+          "frontend/src/main.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/Dashboard.tsx",
+          "frontend/src/components/TransactionForm.tsx"
+        ]
       },
       {
         "id": "REQ-2",
-        "summary": "When a new Transaction is created, append its txn_hash into the investor's session buffer, implementing FIFO ring buffer behavior where if the buffer already has 6 hashes, remove the oldest and then add the new one",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Verify Internet Identity authentication flow works correctly and user can log in",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useInternetIdentity.ts",
+          "frontend/src/components/LoginButton.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/LoginButton.tsx",
+          "frontend/src/App.tsx"
+        ]
       },
       {
         "id": "REQ-3",
-        "summary": "Add a read-only backend endpoint that returns the current list of up to 6 transaction hashes for the logged-in investor, ordered from oldest to newest",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Ensure the actor initialization and backend communication is working properly",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useActor.ts",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/ProfileSetup.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/components/ProfileSetup.tsx"
+        ]
       },
       {
         "id": "REQ-4",
-        "summary": "Display the code or logic added for the session buffer and read-only endpoint in the implementation",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Dashboard.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Dashboard.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/package.json",
+          "frontend/vite.config.ts",
+          "frontend/tsconfig.json",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx"
+        ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
+    "frontend/src/App.tsx",
     "frontend/src/components/Dashboard.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/src/components/LoginButton.tsx",
+    "frontend/src/components/ProfileSetup.tsx",
+    "frontend/src/components/TransactionForm.tsx",
     "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",

@@ -17,6 +17,12 @@ export interface Investment {
   'created_at' : bigint,
   'investor' : Principal,
 }
+export interface SessionState {
+  'session_id' : string,
+  'user_id' : Principal,
+  'timestamp' : bigint,
+  'finalRootHash' : string,
+}
 export interface Transaction {
   'id' : string,
   'transaction_type' : TransactionType,
@@ -49,10 +55,11 @@ export interface _SERVICE {
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createInvestment' : ActorMethod<[string, string, string], undefined>,
   'createTransaction' : ActorMethod<
-    [string, string, bigint, TransactionType, string],
+    [string, string, bigint, TransactionType, string, string],
     undefined
   >,
   'getAllInvestments' : ActorMethod<[], Array<Investment>>,
+  'getAllSessionStates' : ActorMethod<[], Array<SessionState>>,
   'getCallerTransactions' : ActorMethod<[], Array<Transaction>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
@@ -60,11 +67,16 @@ export interface _SERVICE {
   'getInvestmentList' : ActorMethod<[Principal], Array<Investment>>,
   'getInvestmentTransactions' : ActorMethod<[string], Array<Transaction>>,
   'getInvestorTransactions' : ActorMethod<[Principal], Array<Transaction>>,
+  'getLatestSessionHashes' : ActorMethod<[], [] | [SessionState]>,
+  'getSessionIdReturn' : ActorMethod<[null], [] | [string]>,
+  'getSessionState' : ActorMethod<[string], [] | [SessionState]>,
   'getSessionTxnHashes' : ActorMethod<[], Array<string>>,
   'getTransaction' : ActorMethod<[string], [] | [Transaction]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'setSessionIdReturn' : ActorMethod<[string, string], undefined>,
+  'updateLatestSessionHashes' : ActorMethod<[SessionState], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

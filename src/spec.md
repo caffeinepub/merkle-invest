@@ -1,12 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Add per-investor session buffer to track the last 6 transaction hashes with a read-only endpoint.
+**Goal:** Debug and fix all frontend runtime errors to make the application functional.
 
 **Planned changes:**
-- Add an in-memory session buffer for each logged-in investor that stores exactly the last 6 txn_hash values, scoped per user session
-- Implement FIFO ring buffer behavior: when a new transaction is created, append its txn_hash to the investor's buffer, removing the oldest hash if the buffer already contains 6 items
-- Add a read-only backend endpoint that returns the current list of up to 6 transaction hashes for the logged-in investor, ordered from oldest to newest
-- Display the implementation code for the session buffer and read-only endpoint in backend/main.mo
+- Investigate and resolve all console errors and React rendering issues
+- Fix Internet Identity authentication flow and user login
+- Ensure actor initialization and backend communication works properly
+- Verify Integrity & Session State section renders correctly for investor users
+- Check for missing dependencies, import errors, and build configuration issues
 
-**User-visible outcome:** Investors can retrieve their last 6 transaction hashes via a read-only API endpoint, with each investor having their own session-isolated buffer that automatically maintains the most recent transactions in FIFO order.
+**User-visible outcome:** The application loads successfully without errors, users can authenticate with Internet Identity, and all UI components including the Integrity & Session State section display correctly.

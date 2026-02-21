@@ -1,4 +1,105 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-investigate-and-fix-all-frontend-runtime-errors-preventing-the-application-from-loading-or-functioning-correctly",
+      "featureTitle": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Dashboard.tsx",
+        "frontend/src/components/TransactionForm.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-verify-internet-identity-authentication-flow-works-correctly-and-user-can-log-in",
+      "featureTitle": "Verify Internet Identity authentication flow works correctly and user can log in",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/LoginButton.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-actor-initialization-and-backend-communication-is-working-properly",
+      "featureTitle": "Ensure the actor initialization and backend communication is working properly",
+      "files": [
+        "frontend/src/components/ProfileSetup.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-verify-the-integrity-session-state-section-renders-correctly-for-investor-users-with-session-buffer-hashes-and-sessionstate-record",
+      "featureTitle": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "files": [
+        "frontend/src/components/Dashboard.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-check-for-any-missing-dependencies-import-errors-or-build-configuration-issues-that-prevent-the-frontend-from-running",
+      "featureTitle": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    }
+  ]
 }
