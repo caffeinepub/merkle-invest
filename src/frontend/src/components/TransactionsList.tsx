@@ -68,9 +68,12 @@ export default function TransactionsList() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Type</TableHead>
+                    <TableHead>Mode</TableHead>
                     <TableHead>Transaction ID</TableHead>
                     <TableHead>Investment ID</TableHead>
                     <TableHead className="text-right">Amount</TableHead>
+                    <TableHead>Txn ID (Nat)</TableHead>
+                    <TableHead>Txn ID (Text)</TableHead>
                     <TableHead>Timestamp</TableHead>
                     <TableHead>Txn Hash</TableHead>
                     <TableHead>Nonce</TableHead>
@@ -88,6 +91,11 @@ export default function TransactionsList() {
                           </Badge>
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">
+                          {transaction.mode}
+                        </Badge>
+                      </TableCell>
                       <TableCell className="font-mono text-xs max-w-[150px] truncate">
                         {transaction.id}
                       </TableCell>
@@ -96,6 +104,12 @@ export default function TransactionsList() {
                       </TableCell>
                       <TableCell className="text-right font-semibold">
                         ${Number(transaction.amount).toLocaleString()}
+                      </TableCell>
+                      <TableCell className="font-mono text-xs">
+                        {Number(transaction.txnIdNat)}
+                      </TableCell>
+                      <TableCell className="font-mono text-xs max-w-[120px] truncate">
+                        {transaction.txnIdText || '-'}
                       </TableCell>
                       <TableCell className="text-sm">
                         {formatDate(transaction.timestamp)}

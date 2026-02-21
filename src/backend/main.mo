@@ -11,7 +11,9 @@ import Random "mo:core/Random";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import Blob "mo:core/Blob";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   // Initialize the user system state and include authorization mixin
   let accessControlState = AccessControl.initState();
@@ -31,6 +33,7 @@ actor {
     description : Text;
     investor : Principal;
     created_at : Int;
+    eProject : ?Text;
   };
 
   // Transaction types
@@ -55,6 +58,9 @@ actor {
     txn_hash : Text;
     nonce : Text;
     session_seq : Nat;
+    mode : Text;
+    txnIdNat : Nat;
+    txnIdText : ?Text;
   };
 
   public type SessionState = {
@@ -96,7 +102,7 @@ actor {
   };
 
   // Investment management
-  public shared ({ caller }) func createInvestment(id : Text, name : Text, description : Text) : async () {
+  public shared ({ caller }) func createInvestment(id : Text, name : Text, description : Text, eProject : ?Text) : async () {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can create investments");
     };
@@ -106,6 +112,7 @@ actor {
       description;
       investor = caller;
       created_at = Time.now();
+      eProject;
     };
     investments.add(id, investment);
   };
@@ -226,6 +233,9 @@ actor {
     transaction_type : TransactionType,
     txn_hash : Text,
     sessionId : Text,
+    mode : Text,
+    txnIdNat : Nat,
+    txnIdText : ?Text,
   ) : async () {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can create transactions");
@@ -255,6 +265,9 @@ actor {
       txn_hash;
       nonce = storedNonce;
       session_seq;
+      mode;
+      txnIdNat;
+      txnIdText;
     };
     transactions.add(id, transaction);
     // Update in-memory session buffer with new txn hash

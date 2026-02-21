@@ -2,12 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-investigate-and-fix-all-frontend-runtime-errors-preventing-the-application-from-loading-or-functioning-correctly",
-      "featureTitle": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "featureId": "feature-add-a-default-deposits-on-e-projects-dropdown-field-in-the-investmentform-component-with-the-following-38-secoinfi-apps-options-e-contract-lwf-e-contracts-bqe-etutorial-lgc-etutorials-cso-evolved-ai-o6e-forms-sxn-geo-map-w9s-golden-sec-vri-ia-niqaw-947-icp-cloud-storage-hvk-infi-loop-1au-infytask-mia-ipfs-lrm-key-unlock-5hx-map-56b-moap-app-6ag-multi-apps-unify-app-hbc-n8n-tasks-c2i-n8n-workflows-6sy-networth-htm-op-hotels-rests-ae0-pvt-projects-7wo-sec-build-0bj-sec-epay-am0-sec-jewelry-j03-secoin-ep6-sitemap-hub-fe2-sitemap-hub-sy0-sitemap-nya-sitemap-subs-app-j3h-sitemaps-fwh-sudeep-hotels-eu8-terror-uproot-97d-trends-63c-trends-d1l-voice-invoice-au1-xcaller-0aw-yo-data-app-o7u-this-dropdown-should-only-be-accessible-and-visible-to-users-with-admin-role",
+      "featureTitle": "Add a 'Default Deposits on e-Projects' dropdown field in the InvestmentForm component with the following 38 secoinfi-apps options: e-contract-lwf, e-contracts-bqe, etutorial-lgc, etutorials-cso, evolved-ai-o6e, forms-sxn, geo-map-w9s, golden-sec-vri, ia-niqaw-947, icp-cloud-storage-hvk, infi-loop-1au, infytask-mia, ipfs-lrm, key-unlock-5hx, map-56b, moap-app-6ag, multi-apps-unify-app-hbc, n8n-tasks-c2i, n8n-workflows-6sy, networth-htm, op-hotels-rests-ae0, pvt-projects-7wo, sec-build-0bj, sec-epay-am0, sec-jewelry-j03, secoin-ep6, sitemap-hub-fe2, sitemap-hub-sy0, sitemap-nya, sitemap-subs-app-j3h, sitemaps-fwh, sudeep-hotels-eu8, terror-uproot-97d, trends-63c, trends-d1l, voice-invoice-au1, xcaller-0aw, yo-data-app-o7u. This dropdown should only be accessible and visible to users with ADMIN role.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Dashboard.tsx",
-        "frontend/src/components/TransactionForm.tsx"
+        "frontend/src/components/InvestmentForm.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,31 +21,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-verify-internet-identity-authentication-flow-works-correctly-and-user-can-log-in",
-      "featureTitle": "Verify Internet Identity authentication flow works correctly and user can log in",
+      "featureId": "feature-add-a-mode-dropdown-field-to-transactionform-with-options-gpay-crypto-cbdc-wallets-this-field-should-be-required-for-all-fund-transactions",
+      "featureTitle": "Add a 'Mode' dropdown field to TransactionForm with options: GPay, Crypto, CBDC, Wallets. This field should be required for all fund transactions.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/LoginButton.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-actor-initialization-and-backend-communication-is-working-properly",
-      "featureTitle": "Ensure the actor initialization and backend communication is working properly",
-      "files": [
-        "frontend/src/components/ProfileSetup.tsx",
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/components/TransactionForm.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -63,11 +40,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-verify-the-integrity-session-state-section-renders-correctly-for-investor-users-with-session-buffer-hashes-and-sessionstate-record",
-      "featureTitle": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "featureId": "feature-add-two-transaction-id-fields-to-transactionform-a-required-txn-id-numeric-input-field-nat-type-and-an-optional-txn-id-text-text-input-field",
+      "featureTitle": "Add two transaction ID fields to TransactionForm: a required 'Txn ID' numeric input field (Nat type) and an optional 'Txn ID (Text)' text input field.",
       "files": [
-        "frontend/src/components/Dashboard.tsx",
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/components/TransactionForm.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -83,10 +59,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-check-for-any-missing-dependencies-import-errors-or-build-configuration-issues-that-prevent-the-frontend-from-running",
-      "featureTitle": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "featureId": "feature-display-a-prominent-notice-in-transactionform-that-reads-after-successful-deposit-to-our-upi-a-c-secoin-uboi-pl-verify-the-trn-id-by-submitting-details-here-send-a-copy-by-chat-to-https-wa-me-919620058644-include-crypto-deposits-receipts-as-txn-id-after-sending-ethereum-on-erc20-mainnet-to-our-eth-id-0x4a100e184ac1f17491fbbcf549cebfb676694ef7-pl-recheck-verify-if-details-to-be-submitted-is-correct",
+      "featureTitle": "Display a prominent notice in TransactionForm that reads: 'After successful Deposit to Our UPI A/c: secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644. Include Crypto Deposits receipts as Txn ID after sending Ethereum on ERC20 Mainnet to Our Eth ID: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7. Pl. Recheck & Verify if Details to be Submitted is Correct.'",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/components/TransactionForm.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -97,7 +73,46 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-5"
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-confirmation-dialog-or-review-step-in-transactionform-that-displays-all-entered-transaction-details-before-final-submission-allowing-users-to-verify-the-information-is-correct",
+      "featureTitle": "Add a confirmation dialog or review step in TransactionForm that displays all entered transaction details before final submission, allowing users to verify the information is correct.",
+      "files": [
+        "frontend/src/components/TransactionForm.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-transactionlist-and-transactionslist-components-to-display-the-new-transaction-fields-mode-numeric-transaction-id-and-text-transaction-id-when-present",
+      "featureTitle": "Update TransactionList and TransactionsList components to display the new transaction fields: mode, numeric transaction ID, and text transaction ID (when present).",
+      "files": [
+        "frontend/src/components/TransactionList.tsx",
+        "frontend/src/components/TransactionsList.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
       ],
       "confidence": "high"
     }

@@ -13,6 +13,7 @@ import type { Principal } from '@icp-sdk/core/principal';
 export interface Investment {
   'id' : string,
   'name' : string,
+  'eProject' : [] | [string],
   'description' : string,
   'created_at' : bigint,
   'investor' : Principal,
@@ -27,11 +28,14 @@ export interface Transaction {
   'id' : string,
   'transaction_type' : TransactionType,
   'session_seq' : bigint,
+  'txnIdText' : [] | [string],
+  'mode' : string,
   'txn_hash' : string,
   'investment_id' : string,
   'investor_id' : Principal,
   'nonce' : string,
   'timestamp' : bigint,
+  'txnIdNat' : bigint,
   'amount' : bigint,
 }
 export type TransactionType = { 'returnFunds' : null } |
@@ -53,9 +57,22 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'createInvestment' : ActorMethod<[string, string, string], undefined>,
+  'createInvestment' : ActorMethod<
+    [string, string, string, [] | [string]],
+    undefined
+  >,
   'createTransaction' : ActorMethod<
-    [string, string, bigint, TransactionType, string, string],
+    [
+      string,
+      string,
+      bigint,
+      TransactionType,
+      string,
+      string,
+      string,
+      bigint,
+      [] | [string],
+    ],
     undefined
   >,
   'getAllInvestments' : ActorMethod<[], Array<Investment>>,

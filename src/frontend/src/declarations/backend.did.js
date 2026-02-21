@@ -26,6 +26,7 @@ export const TransactionType = IDL.Variant({
 export const Investment = IDL.Record({
   'id' : IDL.Text,
   'name' : IDL.Text,
+  'eProject' : IDL.Opt(IDL.Text),
   'description' : IDL.Text,
   'created_at' : IDL.Int,
   'investor' : IDL.Principal,
@@ -40,11 +41,14 @@ export const Transaction = IDL.Record({
   'id' : IDL.Text,
   'transaction_type' : TransactionType,
   'session_seq' : IDL.Nat,
+  'txnIdText' : IDL.Opt(IDL.Text),
+  'mode' : IDL.Text,
   'txn_hash' : IDL.Text,
   'investment_id' : IDL.Text,
   'investor_id' : IDL.Principal,
   'nonce' : IDL.Text,
   'timestamp' : IDL.Int,
+  'txnIdNat' : IDL.Nat,
   'amount' : IDL.Nat,
 });
 export const UserProfile = IDL.Record({
@@ -56,9 +60,23 @@ export const UserProfile = IDL.Record({
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'createInvestment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+  'createInvestment' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'createTransaction' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Nat, TransactionType, IDL.Text, IDL.Text],
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Nat,
+        TransactionType,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Nat,
+        IDL.Opt(IDL.Text),
+      ],
       [],
       [],
     ),
@@ -120,6 +138,7 @@ export const idlFactory = ({ IDL }) => {
   const Investment = IDL.Record({
     'id' : IDL.Text,
     'name' : IDL.Text,
+    'eProject' : IDL.Opt(IDL.Text),
     'description' : IDL.Text,
     'created_at' : IDL.Int,
     'investor' : IDL.Principal,
@@ -134,11 +153,14 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Text,
     'transaction_type' : TransactionType,
     'session_seq' : IDL.Nat,
+    'txnIdText' : IDL.Opt(IDL.Text),
+    'mode' : IDL.Text,
     'txn_hash' : IDL.Text,
     'investment_id' : IDL.Text,
     'investor_id' : IDL.Principal,
     'nonce' : IDL.Text,
     'timestamp' : IDL.Int,
+    'txnIdNat' : IDL.Nat,
     'amount' : IDL.Nat,
   });
   const UserProfile = IDL.Record({
@@ -150,9 +172,23 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'createInvestment' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+    'createInvestment' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'createTransaction' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Nat, TransactionType, IDL.Text, IDL.Text],
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Nat,
+          TransactionType,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Nat,
+          IDL.Opt(IDL.Text),
+        ],
         [],
         [],
       ),

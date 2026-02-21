@@ -1,13 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Debug and fix all frontend runtime errors to make the application functional.
+**Goal:** Extend the investment creation workflow with e-projects deposits for admins and enhance transaction verification with multiple payment modes and transaction ID fields.
 
 **Planned changes:**
-- Investigate and resolve all console errors and React rendering issues
-- Fix Internet Identity authentication flow and user login
-- Ensure actor initialization and backend communication works properly
-- Verify Integrity & Session State section renders correctly for investor users
-- Check for missing dependencies, import errors, and build configuration issues
+- Add "Default Deposits on e-Projects" dropdown with 38 secoinfi-apps options (ADMIN only) to InvestmentForm
+- Store selected e-project in Investment record with optional eProject field
+- Add "Mode" dropdown to TransactionForm with options: GPay, Crypto, CBDC, Wallets
+- Add two transaction ID fields: required numeric "Txn ID" and optional "Txn ID (Text)"
+- Update Transaction type to include mode, txnIdNat, and txnIdText fields
+- Display prominent payment verification notice with UPI account (secoin@uboi), WhatsApp link, and Ethereum address in TransactionForm
+- Add confirmation dialog in TransactionForm to review all details before submission
+- Update TransactionList and TransactionsList to display new transaction fields (mode and both transaction IDs)
 
-**User-visible outcome:** The application loads successfully without errors, users can authenticate with Internet Identity, and all UI components including the Integrity & Session State section display correctly.
+**User-visible outcome:** Admins can assign e-projects to investments during creation. All users must specify payment mode and transaction IDs when creating transactions, with clear instructions for verifying deposits via UPI or crypto, and can review all details before final submission. Transaction lists display the new payment mode and transaction ID information.

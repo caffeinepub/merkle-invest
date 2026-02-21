@@ -1,96 +1,157 @@
 {
   "kind": "build_request",
-  "title": "Debug and fix non-functional frontend",
-  "priority": "high",
+  "title": "Extend Create Investment with e-Projects Deposits and Multi-Mode Transaction Verification",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "text": "Add a 'Default Deposits on e-Projects' dropdown field in the InvestmentForm component with the following 38 secoinfi-apps options: e-contract-lwf, e-contracts-bqe, etutorial-lgc, etutorials-cso, evolved-ai-o6e, forms-sxn, geo-map-w9s, golden-sec-vri, ia-niqaw-947, icp-cloud-storage-hvk, infi-loop-1au, infytask-mia, ipfs-lrm, key-unlock-5hx, map-56b, moap-app-6ag, multi-apps-unify-app-hbc, n8n-tasks-c2i, n8n-workflows-6sy, networth-htm, op-hotels-rests-ae0, pvt-projects-7wo, sec-build-0bj, sec-epay-am0, sec-jewelry-j03, secoin-ep6, sitemap-hub-fe2, sitemap-hub-sy0, sitemap-nya, sitemap-subs-app-j3h, sitemaps-fwh, sudeep-hotels-eu8, terror-uproot-97d, trends-63c, trends-d1l, voice-invoice-au1, xcaller-0aw, yo-data-app-o7u. This dropdown should only be accessible and visible to users with ADMIN role.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
         ],
         "quotes": [
-          "But still app is not working, recheck its frontend"
+          "As Extension to \"Create New Investment\" section include new Default Deposits on e-Projects with options Menu list of secoinfi-apps"
         ]
       },
       "acceptanceCriteria": [
-        "Application loads without console errors",
-        "No React rendering errors or hooks violations",
-        "All components mount successfully"
+        "Dropdown is visible in InvestmentForm only when user role is ADMIN",
+        "All 38 e-project options are available in the dropdown",
+        "Selected e-project value is stored with the investment"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Verify Internet Identity authentication flow works correctly and user can log in",
-      "target": "frontend",
+      "text": "Store the selected e-project value in the backend Investment type by adding an eProject field of type ?Text to the Investment record in main.mo.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
         ]
       },
       "acceptanceCriteria": [
-        "Login button triggers Internet Identity authentication",
-        "User identity is properly stored and persisted",
-        "Authenticated state updates UI correctly"
+        "Investment record includes optional eProject field",
+        "Selected e-project is persisted when creating new investments"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure the actor initialization and backend communication is working properly",
+      "text": "Add a 'Mode' dropdown field to TransactionForm with options: GPay, Crypto, CBDC, Wallets. This field should be required for all fund transactions.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
+        ],
+        "quotes": [
+          "For each Funds Txn include its Mode : Ex: GPay/Crypto/CBDC/Wallets"
         ]
       },
       "acceptanceCriteria": [
-        "Actor is initialized with correct canister ID",
-        "Backend calls complete without errors",
-        "Query hooks properly fetch and cache data"
+        "Mode dropdown appears in TransactionForm with 4 options",
+        "Mode selection is required before transaction submission",
+        "Selected mode is included in transaction data"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "text": "Add two transaction ID fields to TransactionForm: a required 'Txn ID' numeric input field (Nat type) and an optional 'Txn ID (Text)' text input field.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
+        ],
+        "quotes": [
+          "Trn ID input field as NatValue, optional Txn ID as stringValue too"
         ]
       },
       "acceptanceCriteria": [
-        "Session buffer displays up to 6 transaction hashes",
-        "Last SessionState record shows previousStateHash, sessionBufferHash, and timestamp",
-        "Section is visible only to INVESTOR role users"
+        "Numeric Txn ID field accepts only natural numbers and is required",
+        "Text Txn ID field accepts alphanumeric strings and is optional",
+        "Both fields are submitted with transaction data"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
-      "target": "frontend",
+      "text": "Update the Transaction type in main.mo to include three new fields: mode of type Text, txnIdNat of type Nat, and txnIdText of type ?Text.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
         ]
       },
       "acceptanceCriteria": [
-        "All imports resolve correctly",
-        "No missing npm packages",
-        "Vite build configuration is valid"
+        "Transaction record stores payment mode",
+        "Transaction record stores numeric transaction ID",
+        "Transaction record stores optional text transaction ID"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Display a prominent notice in TransactionForm that reads: 'After successful Deposit to Our UPI A/c: secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644. Include Crypto Deposits receipts as Txn ID after sending Ethereum on ERC20 Mainnet to Our Eth ID: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7. Pl. Recheck & Verify if Details to be Submitted is Correct.'",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Also Provide Notice: After successful Deposit to Our UPI A/c : secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Notice is displayed prominently in TransactionForm",
+        "UPI account 'secoin@uboi' is included in the notice",
+        "WhatsApp link https://wa.me/919620058644 is clickable",
+        "Ethereum address 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7 is displayed",
+        "Notice reminds users to verify details before submission"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add a confirmation dialog or review step in TransactionForm that displays all entered transaction details before final submission, allowing users to verify the information is correct.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Pl. Recheck & Verify if Details to be Submitted is Correct"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can review all transaction details before submission",
+        "Confirmation step includes mode, both transaction IDs, amount, and type",
+        "User must explicitly confirm before transaction is created"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Update TransactionList and TransactionsList components to display the new transaction fields: mode, numeric transaction ID, and text transaction ID (when present).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Transaction list displays payment mode for each transaction",
+        "Both transaction ID fields are visible when available",
+        "Layout accommodates new fields without breaking existing display"
       ]
     }
   ],
   "constraints": [
-    "Do not modify backend logic or data models",
-    "Preserve existing authentication flow with Internet Identity",
-    "Maintain the current component structure and routing setup"
+    "The e-projects dropdown must only be accessible to users with ADMIN role",
+    "Preserve existing Investment and Transaction record structures by adding new optional fields",
+    "Maintain the existing session-based integrity tracking system",
+    "Keep all Motoko logic within the single main actor file",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useActor.ts, main.tsx, components/ui"
   ],
   "nonGoals": [
-    "Adding new features or functionality",
-    "Changing the UI design or styling",
-    "Modifying backend endpoints or actor methods"
+    "Integration with actual payment gateways or blockchain networks",
+    "Automated transaction verification or reconciliation",
+    "Real-time payment status updates",
+    "Admin interface for managing the e-projects list"
   ],
   "imageRequirements": {
     "required": [],

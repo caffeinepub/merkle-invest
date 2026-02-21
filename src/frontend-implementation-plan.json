@@ -1,145 +1,108 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Debug and Fix Non-Functional Frontend",
+  "title": "Extend Create Investment with e-Projects Deposits and Multi-Mode Transaction Verification",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "summary": "Add ADMIN-only e-projects dropdown to InvestmentForm with 38 secoinfi-apps options",
       "acceptanceCriteria": [
-        "Application loads without console errors",
-        "No React rendering errors or hooks violations",
-        "All components mount successfully"
+        "Dropdown is visible in InvestmentForm only when user role is ADMIN",
+        "All 38 e-project options are available in the dropdown",
+        "Selected e-project value is stored with the investment"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/InvestmentForm.tsx",
           "operation": "modify",
-          "description": "Fix any React hooks violations, conditional rendering logic, and ensure proper error boundaries are in place. Verify router setup and authentication flow logic for proper sequencing."
-        },
-        {
-          "path": "frontend/src/components/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Fix any runtime errors in the Dashboard component, ensure hooks are called unconditionally, and verify the Integrity & Session State section logic for INVESTOR role users."
-        },
-        {
-          "path": "frontend/src/components/InvestmentCard.tsx",
-          "operation": "modify",
-          "description": "Fix any errors in tab rendering, transaction display logic, and dialog interactions. Ensure all hooks follow React rules."
-        },
-        {
-          "path": "frontend/src/components/TransactionForm.tsx",
-          "operation": "modify",
-          "description": "Fix session management initialization logic, ensure proper async handling, and resolve any state update issues causing rendering errors."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Verify React 18 concurrent rendering setup, ensure proper provider nesting order, and fix any initialization errors with QueryClient or InternetIdentity providers."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Verify Internet Identity authentication flow works correctly and user can log in",
-      "acceptanceCriteria": [
-        "Login button triggers Internet Identity authentication",
-        "User identity is properly stored and persisted",
-        "Authenticated state updates UI correctly"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useInternetIdentity.ts",
-          "operation": "modify",
-          "description": "Fix authentication flow issues, verify AuthClient initialization, ensure proper identity persistence in sessionStorage, and handle authentication state transitions correctly. Use the authorization component's guidance to ensure proper login/logout behavior."
-        },
-        {
-          "path": "frontend/src/components/LoginButton.tsx",
-          "operation": "modify",
-          "description": "Fix login/logout handler logic, ensure proper error handling for authentication failures, verify query cache clearing on logout, and ensure session finalization works correctly for investors."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Verify authentication state checks are working correctly, ensure proper conditional rendering based on authentication status, and fix any issues with the profile setup flow for new users."
+          "description": "Add a 'Default Deposits on e-Projects' dropdown field with 38 secoinfi-apps options (e-contract-lwf, e-contracts-bqe, etutorial-lgc, etutorials-cso, evolved-ai-o6e, forms-sxn, geo-map-w9s, golden-sec-vri, ia-niqaw-947, icp-cloud-storage-hvk, infi-loop-1au, infytask-mia, ipfs-lrm, key-unlock-5hx, map-56b, moap-app-6ag, multi-apps-unify-app-hbc, n8n-tasks-c2i, n8n-workflows-6sy, networth-htm, op-hotels-rests-ae0, pvt-projects-7wo, sec-build-0bj, sec-epay-am0, sec-jewelry-j03, secoin-ep6, sitemap-hub-fe2, sitemap-hub-sy0, sitemap-nya, sitemap-subs-app-j3h, sitemaps-fwh, sudeep-hotels-eu8, terror-uproot-97d, trends-63c, trends-d1l, voice-invoice-au1, xcaller-0aw, yo-data-app-o7u). Use the authorization component to check if the current user has ADMIN role via isCallerAdmin() query before showing this field. Store the selected e-project value in the form state and pass it to createInvestment backend call as the eProject parameter. Add a Select component from shadcn/ui for the dropdown."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Ensure the actor initialization and backend communication is working properly",
+      "summary": "Add required Mode dropdown to TransactionForm with payment method options",
       "acceptanceCriteria": [
-        "Actor is initialized with correct canister ID",
-        "Backend calls complete without errors",
-        "Query hooks properly fetch and cache data"
+        "Mode dropdown appears in TransactionForm with 4 options",
+        "Mode selection is required before transaction submission",
+        "Selected mode is included in transaction data"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useActor.ts",
+          "path": "frontend/src/components/TransactionForm.tsx",
           "operation": "modify",
-          "description": "Fix actor initialization logic, verify canister ID retrieval from environment variables or URL parameters, ensure proper actor creation with authenticated or anonymous identity, and fix access control initialization. Verify the component's usage instructions for proper actor setup."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Fix React Query hooks to properly depend on actor availability, ensure proper error handling for backend calls, verify enabled flags prevent premature execution, and fix any issues with query invalidation or caching."
-        },
-        {
-          "path": "frontend/src/components/ProfileSetup.tsx",
-          "operation": "modify",
-          "description": "Fix profile setup mutation calls, ensure proper error handling, verify the profile data structure matches backend expectations (name, email, role), and ensure proper navigation after successful profile creation."
+          "description": "Add a required 'Mode' dropdown field using Select component from shadcn/ui with four options: GPay, Crypto, CBDC, Wallets. Add mode to the form state and validation to ensure it is selected before submission. Pass the mode value to the createTransaction backend call as the mode parameter."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "summary": "Add transaction ID fields to TransactionForm: required numeric Txn ID and optional text Txn ID",
       "acceptanceCriteria": [
-        "Session buffer displays up to 6 transaction hashes",
-        "Last SessionState record shows previousStateHash, sessionBufferHash, and timestamp",
-        "Section is visible only to INVESTOR role users"
+        "Numeric Txn ID field accepts only natural numbers and is required",
+        "Text Txn ID field accepts alphanumeric strings and is optional",
+        "Both fields are submitted with transaction data"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Dashboard.tsx",
+          "path": "frontend/src/components/TransactionForm.tsx",
           "operation": "modify",
-          "description": "Fix the Integrity & Session State section rendering logic, ensure proper role-based conditional display (only for INVESTOR users), verify session buffer hash fetching and display (up to 6 hashes), and fix SessionState record display with proper field mapping (previousStateHash, sessionBufferHash, timestamp)."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Verify the session-related query hooks (useGetSessionTxnHashes, useGetLatestSessionHashes) are properly implemented, ensure correct backend method calls, and fix any issues with data transformation or caching."
+          "description": "Add two transaction ID input fields: a required 'Txn ID' numeric input field that accepts only positive integers (to be passed as txnIdNat of type Nat to the backend) and an optional 'Txn ID (Text)' text input field (to be passed as txnIdText). Add validation to ensure the numeric field contains only valid natural numbers. Include both fields in the form state and pass them to createTransaction backend call as txnIdNat and txnIdText parameters."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "id": "REQ-6",
+      "summary": "Display transaction verification notice with UPI, WhatsApp, and Ethereum payment instructions",
       "acceptanceCriteria": [
-        "All imports resolve correctly",
-        "No missing npm packages",
-        "Vite build configuration is valid"
+        "Notice is displayed prominently in TransactionForm",
+        "UPI account 'secoin@uboi' is included in the notice",
+        "WhatsApp link https://wa.me/919620058644 is clickable",
+        "Ethereum address 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7 is displayed",
+        "Notice reminds users to verify details before submission"
       ],
       "file_operations": [
         {
-          "path": "frontend/package.json",
+          "path": "frontend/src/components/TransactionForm.tsx",
           "operation": "modify",
-          "description": "Verify all required dependencies are present and at compatible versions, including React 18, TanStack Router, TanStack Query, @dfinity packages, Internet Identity packages, and shadcn/ui dependencies. Add any missing packages."
+          "description": "Add a prominent notice section at the top or middle of the TransactionForm displaying the following message: 'After successful Deposit to Our UPI A/c: secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644. Include Crypto Deposits receipts as Txn ID after sending Ethereum on ERC20 Mainnet to Our Eth ID: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7. Pl. Recheck & Verify if Details to be Submitted is Correct.' Use an Alert or Card component from shadcn/ui with info/warning styling. Make the WhatsApp link clickable with target='_blank' and rel='noopener noreferrer'."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Add confirmation dialog to TransactionForm for reviewing transaction details before submission",
+      "acceptanceCriteria": [
+        "User can review all transaction details before submission",
+        "Confirmation step includes mode, both transaction IDs, amount, and type",
+        "User must explicitly confirm before transaction is created"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/TransactionForm.tsx",
+          "operation": "modify",
+          "description": "Add a confirmation dialog using AlertDialog component from shadcn/ui that displays all entered transaction details (transaction type, mode, amount, numeric transaction ID, text transaction ID if provided) before final submission. Trigger this dialog when the user clicks the submit button. In the dialog, show all fields with their values in a readable format and include 'Confirm' and 'Cancel' buttons. Only call createTransaction after the user clicks 'Confirm' in the dialog."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Update transaction list components to display new mode and transaction ID fields",
+      "acceptanceCriteria": [
+        "Transaction list displays payment mode for each transaction",
+        "Both transaction ID fields are visible when available",
+        "Layout accommodates new fields without breaking existing display"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/TransactionList.tsx",
+          "operation": "modify",
+          "description": "Add display of the new transaction fields: mode, txnIdNat (numeric transaction ID), and txnIdText (optional text transaction ID). Update the transaction list item layout to include these fields alongside existing details. Use Badge component for displaying the mode. Show both transaction IDs with appropriate labels, displaying txnIdText only when it has a value."
         },
         {
-          "path": "frontend/vite.config.ts",
+          "path": "frontend/src/components/TransactionsList.tsx",
           "operation": "modify",
-          "description": "Fix Vite configuration to ensure proper module resolution, environment variable handling, and plugin setup. Verify polyfills for Node.js globals if needed for @dfinity packages."
-        },
-        {
-          "path": "frontend/tsconfig.json",
-          "operation": "modify",
-          "description": "Verify TypeScript configuration is correct for React 18, ensure proper module resolution strategy, verify lib includes necessary DOM and ES features, and fix any path mapping issues."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Fix any import path errors, ensure all component imports resolve correctly, verify router configuration imports are valid, and fix any type import issues."
+          "description": "Add three new columns to the transactions table: 'Mode' displaying the payment mode as a Badge, 'Txn ID (Nat)' showing the numeric transaction ID, and 'Txn ID (Text)' showing the optional text transaction ID when present. Update the table headers and data rows to include these fields while maintaining the existing table layout and responsiveness."
         }
       ]
     }

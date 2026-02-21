@@ -38,6 +38,19 @@ export function useSaveCallerUserProfile() {
   });
 }
 
+export function useIsCallerAdmin() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['isCallerAdmin'],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isCallerAdmin();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
 export function useGetAllInvestments() {
   const { actor, isFetching } = useActor();
 
@@ -69,9 +82,19 @@ export function useCreateInvestment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, name, description }: { id: string; name: string; description: string }) => {
+    mutationFn: async ({ 
+      id, 
+      name, 
+      description, 
+      eProject 
+    }: { 
+      id: string; 
+      name: string; 
+      description: string;
+      eProject?: string | null;
+    }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.createInvestment(id, name, description);
+      return actor.createInvestment(id, name, description, eProject || null);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['investments'] });
@@ -118,6 +141,9 @@ export function useCreateTransaction() {
       transaction_type,
       txn_hash,
       sessionId,
+      mode,
+      txnIdNat,
+      txnIdText,
     }: {
       id: string;
       investment_id: string;
@@ -125,9 +151,22 @@ export function useCreateTransaction() {
       transaction_type: any;
       txn_hash: string;
       sessionId: string;
+      mode: string;
+      txnIdNat: bigint;
+      txnIdText?: string | null;
     }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.createTransaction(id, investment_id, amount, transaction_type, txn_hash, sessionId);
+      return actor.createTransaction(
+        id, 
+        investment_id, 
+        amount, 
+        transaction_type, 
+        txn_hash, 
+        sessionId, 
+        mode, 
+        txnIdNat, 
+        txnIdText || null
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['investmentTransactions'] });

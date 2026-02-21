@@ -45,9 +45,14 @@ export default function TransactionList({ transactions, investmentName }: Transa
                 <div className="flex items-center gap-3">
                   {getTransactionIcon(transaction.transaction_type)}
                   <div>
-                    <Badge variant="outline" className="text-xs">
-                      {formatTransactionType(transaction.transaction_type)}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        {formatTransactionType(transaction.transaction_type)}
+                      </Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        {transaction.mode}
+                      </Badge>
+                    </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       {transaction.id.substring(0, 20)}...
                     </p>
@@ -66,6 +71,16 @@ export default function TransactionList({ transactions, investmentName }: Transa
                   <span className="text-muted-foreground">Session Seq:</span>
                   <p className="font-mono">{Number(transaction.session_seq)}</p>
                 </div>
+                <div>
+                  <span className="text-muted-foreground">Txn ID (Nat):</span>
+                  <p className="font-mono truncate">{Number(transaction.txnIdNat)}</p>
+                </div>
+                {transaction.txnIdText && (
+                  <div>
+                    <span className="text-muted-foreground">Txn ID (Text):</span>
+                    <p className="font-mono truncate">{transaction.txnIdText}</p>
+                  </div>
+                )}
               </div>
             </div>
           );

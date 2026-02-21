@@ -1,56 +1,108 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [
-    "Frontend not working - requires investigation"
+  "summary": "Investment management platform with deposit tracking for e-projects and multi-mode payment verification",
+  "architectural_notes": [
+    "Admin-only access for appending e-project deposit options",
+    "Multi-mode payment tracking: GPay, Crypto, CBDC, Wallets",
+    "Dual transaction ID fields: NatValue (required) and stringValue (optional)",
+    "Payment verification flow: UPI (secoin@uboi) + WhatsApp notification + Ethereum ERC20 deposits"
   ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-investigate-and-fix-all-frontend-runtime-errors-preventing-the-application-from-loading-or-functioning-correctly",
-      "title": "Investigate and fix all frontend runtime errors preventing the application from loading or functioning correctly",
+      "id": "feature-add-a-default-deposits-on-e-projects-dropdown-field-in-the-investmentform-component-with-the-following-38-secoinfi-apps-options-e-contract-lwf-e-contracts-bqe-etutorial-lgc-etutorials-cso-evolved-ai-o6e-forms-sxn-geo-map-w9s-golden-sec-vri-ia-niqaw-947-icp-cloud-storage-hvk-infi-loop-1au-infytask-mia-ipfs-lrm-key-unlock-5hx-map-56b-moap-app-6ag-multi-apps-unify-app-hbc-n8n-tasks-c2i-n8n-workflows-6sy-networth-htm-op-hotels-rests-ae0-pvt-projects-7wo-sec-build-0bj-sec-epay-am0-sec-jewelry-j03-secoin-ep6-sitemap-hub-fe2-sitemap-hub-sy0-sitemap-nya-sitemap-subs-app-j3h-sitemaps-fwh-sudeep-hotels-eu8-terror-uproot-97d-trends-63c-trends-d1l-voice-invoice-au1-xcaller-0aw-yo-data-app-o7u-this-dropdown-should-only-be-accessible-and-visible-to-users-with-admin-role",
+      "title": "Add a 'Default Deposits on e-Projects' dropdown field in the InvestmentForm component with the following 38 secoinfi-apps options: e-contract-lwf, e-contracts-bqe, etutorial-lgc, etutorials-cso, evolved-ai-o6e, forms-sxn, geo-map-w9s, golden-sec-vri, ia-niqaw-947, icp-cloud-storage-hvk, infi-loop-1au, infytask-mia, ipfs-lrm, key-unlock-5hx, map-56b, moap-app-6ag, multi-apps-unify-app-hbc, n8n-tasks-c2i, n8n-workflows-6sy, networth-htm, op-hotels-rests-ae0, pvt-projects-7wo, sec-build-0bj, sec-epay-am0, sec-jewelry-j03, secoin-ep6, sitemap-hub-fe2, sitemap-hub-sy0, sitemap-nya, sitemap-subs-app-j3h, sitemaps-fwh, sudeep-hotels-eu8, terror-uproot-97d, trends-63c, trends-d1l, voice-invoice-au1, xcaller-0aw, yo-data-app-o7u. This dropdown should only be accessible and visible to users with ADMIN role.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-verify-internet-identity-authentication-flow-works-correctly-and-user-can-log-in",
-      "title": "Verify Internet Identity authentication flow works correctly and user can log in",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-actor-initialization-and-backend-communication-is-working-properly",
-      "title": "Ensure the actor initialization and backend communication is working properly",
+      "id": "feature-add-a-mode-dropdown-field-to-transactionform-with-options-gpay-crypto-cbdc-wallets-this-field-should-be-required-for-all-fund-transactions",
+      "title": "Add a 'Mode' dropdown field to TransactionForm with options: GPay, Crypto, CBDC, Wallets. This field should be required for all fund transactions.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-verify-the-integrity-session-state-section-renders-correctly-for-investor-users-with-session-buffer-hashes-and-sessionstate-record",
-      "title": "Verify the Integrity & Session State section renders correctly for investor users with session buffer hashes and SessionState record",
+      "id": "feature-add-two-transaction-id-fields-to-transactionform-a-required-txn-id-numeric-input-field-nat-type-and-an-optional-txn-id-text-text-input-field",
+      "title": "Add two transaction ID fields to TransactionForm: a required 'Txn ID' numeric input field (Nat type) and an optional 'Txn ID (Text)' text input field.",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-check-for-any-missing-dependencies-import-errors-or-build-configuration-issues-that-prevent-the-frontend-from-running",
-      "title": "Check for any missing dependencies, import errors, or build configuration issues that prevent the frontend from running",
+      "id": "feature-display-a-prominent-notice-in-transactionform-that-reads-after-successful-deposit-to-our-upi-a-c-secoin-uboi-pl-verify-the-trn-id-by-submitting-details-here-send-a-copy-by-chat-to-https-wa-me-919620058644-include-crypto-deposits-receipts-as-txn-id-after-sending-ethereum-on-erc20-mainnet-to-our-eth-id-0x4a100e184ac1f17491fbbcf549cebfb676694ef7-pl-recheck-verify-if-details-to-be-submitted-is-correct",
+      "title": "Display a prominent notice in TransactionForm that reads: 'After successful Deposit to Our UPI A/c: secoin@uboi, Pl. verify the Trn ID by submitting details here & Send a Copy by Chat to https://wa.me/919620058644. Include Crypto Deposits receipts as Txn ID after sending Ethereum on ERC20 Mainnet to Our Eth ID: 0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7. Pl. Recheck & Verify if Details to be Submitted is Correct.'",
       "reqIds": [
-        "REQ-5"
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-confirmation-dialog-or-review-step-in-transactionform-that-displays-all-entered-transaction-details-before-final-submission-allowing-users-to-verify-the-information-is-correct",
+      "title": "Add a confirmation dialog or review step in TransactionForm that displays all entered transaction details before final submission, allowing users to verify the information is correct.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-transactionlist-and-transactionslist-components-to-display-the-new-transaction-fields-mode-numeric-transaction-id-and-text-transaction-id-when-present",
+      "title": "Update TransactionList and TransactionsList components to display the new transaction fields: mode, numeric transaction ID, and text transaction ID (when present).",
+      "reqIds": [
+        "REQ-8"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Debug and fix non-functional frontend",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add Default Deposits on e-Projects dropdown with secoinfi-apps list (admin-only)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add transaction mode field (GPay/Crypto/CBDC/Wallets) and Txn ID fields (NatValue + optional stringValue)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Display deposit verification notice with UPI (secoin@uboi), WhatsApp contact, and Ethereum address (0x4a100E184ac1f17491Fbbcf549CeBfB676694eF7)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add submission verification/confirmation step before final submit",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Store the selected e-project value in the backend Investment type by adding an eProject field of type ?Text to the Investment record in main.mo.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update the Transaction type in main.mo to include three new fields: mode of type Text, txnIdNat of type Nat, and txnIdText of type ?Text.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Extend Create Investment with e-Projects Deposits and Multi-Mode Transaction Verification",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
