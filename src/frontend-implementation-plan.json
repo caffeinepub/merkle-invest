@@ -1,0 +1,6 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add per-investor session buffer for last 6 transaction hashes with read-only endpoint",
+  "requirements": []
+}

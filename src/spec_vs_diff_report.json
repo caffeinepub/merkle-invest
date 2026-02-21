@@ -1,0 +1,25 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-21T14:27:06.750Z",
+  "summary": "The implementation successfully addresses all four requirements. The backend adds a per-investor session buffer storing exactly 6 transaction hashes with FIFO behavior, implements a read-only endpoint returning ordered hashes, and the code is visible in backend/main.mo. The frontend integrates the new endpoint with a dashboard display showing session hashes.",
+  "missing_requirements": [],
+  "hallucinated_features": [
+    {
+      "description": "Frontend UI component displaying session transaction hashes in Dashboard.tsx",
+      "reason": "BuildRequest explicitly lists 'Adding frontend UI for displaying the buffer' in Non-goals, indicating frontend visualization was not requested",
+      "evidence": [
+        "frontend/src/components/Dashboard.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ]
+    }
+  ],
+  "confidence": 0.95,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/components/Dashboard.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "project_state.json"
+  ]
+}

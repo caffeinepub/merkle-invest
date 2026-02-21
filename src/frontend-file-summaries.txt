@@ -1,0 +1,20 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, handling authentication state, profile setup flow, and routing between dashboard, investments list, and transactions list pages.",
+  "frontend/src/components/Header.tsx": "Application header component with navigation menu, displaying app logo, user welcome message with formatted role badge, and login/logout button with routing support.",
+  "frontend/src/components/Footer.tsx": "Footer component with copyright notice and attribution link to caffeine.ai with UTM tracking parameters.",
+  "frontend/src/components/LoginButton.tsx": "Reusable login/logout button component that handles Internet Identity authentication and clears query cache on logout.",
+  "frontend/src/components/ProfileSetup.tsx": "Profile setup form component that collects user name, email, and role (ADMIN or INVESTOR) for first-time users after authentication.",
+  "frontend/src/components/Dashboard.tsx": "Main dashboard component displaying user profile, summary statistics, session transaction hashes card showing up to 6 recent hashes from current session, and recent investments grid with navigation support.",
+  "frontend/src/components/InvestmentCard.tsx": "Card component for individual investments showing overview with creation date, transaction total, and tabbed interface for viewing transactions.",
+  "frontend/src/components/InvestmentForm.tsx": "Form component for creating new investments with name and description fields.",
+  "frontend/src/components/TransactionForm.tsx": "Form component for creating transactions with transaction type selection and amount input; backend now automatically generates nonce and session_seq fields.",
+  "frontend/src/components/TransactionList.tsx": "Scrollable list component displaying transactions for a specific investment with visual indicators, transaction type badges, and nonce/session_seq fields.",
+  "frontend/src/hooks/useQueries.ts": "Custom React Query hooks for all backend operations including new useGetSessionTxnHashes hook that fetches the current session's transaction hash buffer, with automatic invalidation when transactions are created.",
+  "frontend/src/config.ts": "Configuration module that loads canister IDs and network settings from env.json and creates backend actors with proper options.",
+  "frontend/src/backend.d.ts": "TypeScript type definitions for backend interface including Investment, Transaction, UserProfile types and all canister methods with _initializeAccessControlWithSecret added.",
+  "frontend/src/main.tsx": "Application entry point that sets up React Query and Internet Identity providers, with CSS import from ./index.css in the src directory.",
+  "frontend/src/index.css": "Global CSS file with Tailwind directives and OKLCH color system using warm amber/orange tones for a professional financial application aesthetic in both light and dark modes.",
+  "frontend/src/components/InvestmentsList.tsx": "Page component displaying all investments in a grid layout with investment details including id, name, description, investor principal, and creation date.",
+  "frontend/src/components/TransactionsList.tsx": "Page component displaying all user transactions in a table format with detailed fields including transaction type, id, investment id, amount, timestamp, txn_hash, nonce, and session_seq.",
+  "frontend/tailwind.config.js": "Tailwind configuration with warm color palette using amber/orange tones, custom font families (Inter and JetBrains Mono), and consistent design tokens for a professional investment platform."
+}
